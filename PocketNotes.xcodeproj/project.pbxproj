@@ -1,0 +1,394 @@
+// !$*UTF8*$!
+{
+	archiveVersion = 1;
+	classes = {
+	};
+	objectVersion = 77;
+	objects = {
+
+/* Begin PBXBuildFile section */
+		02FEB9B4009D14C219615351 /* GlobalHotkey.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1C70ADEEEC6866BBDAA2AFF9 /* GlobalHotkey.swift */; };
+		0C83DF68A9D29D2DCF73B257 /* MarkdownPreview.swift in Sources */ = {isa = PBXBuildFile; fileRef = 98B120A42C43D20C91A07221 /* MarkdownPreview.swift */; };
+		11C97685686FC00D8CD5468B /* NoteNode.swift in Sources */ = {isa = PBXBuildFile; fileRef = 63D9AFF1DD159A1FB2B27F07 /* NoteNode.swift */; };
+		2FAAA07A6B8B787D451A12BE /* NotesStore.swift in Sources */ = {isa = PBXBuildFile; fileRef = 668F727AE15506978DDC28A6 /* NotesStore.swift */; };
+		6917412E0B741C795BF4720C /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 371CD77B68A9A52E22B41082 /* AppDelegate.swift */; };
+		8F286E6C807DBE806DE921A5 /* SidebarView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 818613C21C76992EED9A62E8 /* SidebarView.swift */; };
+		91FDD525F362F1F721C8B711 /* PocketNotesApp.swift in Sources */ = {isa = PBXBuildFile; fileRef = DDFBB40DBF67008DD8D91C8B /* PocketNotesApp.swift */; };
+		9464B83426D82B33B10E94B0 /* SlidingPanel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 90A6D02B02A4A8CCDA76861F /* SlidingPanel.swift */; };
+		988EA10B51C40C8AFD74FE85 /* PanelController.swift in Sources */ = {isa = PBXBuildFile; fileRef = C7C69F16DF01DB38768E671C /* PanelController.swift */; };
+		B4033D52606DA001345ADE7D /* ContentView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9167DD3F355CDAE580B340E6 /* ContentView.swift */; };
+		C389533195135CF450B1E858 /* SettingsView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 84A865B606225E99C18C5EFA /* SettingsView.swift */; };
+		C587FDBB069FF5D320126975 /* EditorView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 95FAF694362A972A6370D32B /* EditorView.swift */; };
+		CCED5D3DEE3C084ACD4D57ED /* FolderWatcher.swift in Sources */ = {isa = PBXBuildFile; fileRef = DCB1D56572D7023AE51D5C5F /* FolderWatcher.swift */; };
+/* End PBXBuildFile section */
+
+/* Begin PBXFileReference section */
+		1C70ADEEEC6866BBDAA2AFF9 /* GlobalHotkey.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GlobalHotkey.swift; sourceTree = "<group>"; };
+		371CD77B68A9A52E22B41082 /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
+		63D9AFF1DD159A1FB2B27F07 /* NoteNode.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NoteNode.swift; sourceTree = "<group>"; };
+		668F727AE15506978DDC28A6 /* NotesStore.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NotesStore.swift; sourceTree = "<group>"; };
+		7FFF592FF9D661DD893DE3A9 /* PocketNotes.entitlements */ = {isa = PBXFileReference; lastKnownFileType = text.plist.entitlements; path = PocketNotes.entitlements; sourceTree = "<group>"; };
+		818613C21C76992EED9A62E8 /* SidebarView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SidebarView.swift; sourceTree = "<group>"; };
+		84A865B606225E99C18C5EFA /* SettingsView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SettingsView.swift; sourceTree = "<group>"; };
+		90A6D02B02A4A8CCDA76861F /* SlidingPanel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SlidingPanel.swift; sourceTree = "<group>"; };
+		9167DD3F355CDAE580B340E6 /* ContentView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ContentView.swift; sourceTree = "<group>"; };
+		95FAF694362A972A6370D32B /* EditorView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = EditorView.swift; sourceTree = "<group>"; };
+		98B120A42C43D20C91A07221 /* MarkdownPreview.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MarkdownPreview.swift; sourceTree = "<group>"; };
+		9DBCB2EB02C786FFCE884708 /* PocketNotes.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = PocketNotes.app; sourceTree = BUILT_PRODUCTS_DIR; };
+		C7C69F16DF01DB38768E671C /* PanelController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PanelController.swift; sourceTree = "<group>"; };
+		DCB1D56572D7023AE51D5C5F /* FolderWatcher.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FolderWatcher.swift; sourceTree = "<group>"; };
+		DDFBB40DBF67008DD8D91C8B /* PocketNotesApp.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PocketNotesApp.swift; sourceTree = "<group>"; };
+/* End PBXFileReference section */
+
+/* Begin PBXGroup section */
+		12B9955B89BE08681898D799 /* Resources */ = {
+			isa = PBXGroup;
+			children = (
+			);
+			path = Resources;
+			sourceTree = "<group>";
+		};
+		132B6DD81111DEE073294570 = {
+			isa = PBXGroup;
+			children = (
+				55E2E71A7DDBD9619E463B9B /* PocketNotes */,
+				452B94D7AFCD53862144D403 /* Products */,
+			);
+			sourceTree = "<group>";
+		};
+		452B94D7AFCD53862144D403 /* Products */ = {
+			isa = PBXGroup;
+			children = (
+				9DBCB2EB02C786FFCE884708 /* PocketNotes.app */,
+			);
+			name = Products;
+			sourceTree = "<group>";
+		};
+		4B3074C0D96A3501458D496A /* Settings */ = {
+			isa = PBXGroup;
+			children = (
+				84A865B606225E99C18C5EFA /* SettingsView.swift */,
+			);
+			path = Settings;
+			sourceTree = "<group>";
+		};
+		55E2E71A7DDBD9619E463B9B /* PocketNotes */ = {
+			isa = PBXGroup;
+			children = (
+				371CD77B68A9A52E22B41082 /* AppDelegate.swift */,
+				7FFF592FF9D661DD893DE3A9 /* PocketNotes.entitlements */,
+				DDFBB40DBF67008DD8D91C8B /* PocketNotesApp.swift */,
+				DA4626E64118EA1DE9909CC3 /* Hotkey */,
+				83162A8E0E2AE629A0887B6F /* Panel */,
+				12B9955B89BE08681898D799 /* Resources */,
+				4B3074C0D96A3501458D496A /* Settings */,
+				F425D8FDCB773F1D442568CB /* Storage */,
+				7D28B635D0348CEC31C9441A /* UI */,
+			);
+			path = PocketNotes;
+			sourceTree = "<group>";
+		};
+		7D28B635D0348CEC31C9441A /* UI */ = {
+			isa = PBXGroup;
+			children = (
+				9167DD3F355CDAE580B340E6 /* ContentView.swift */,
+				95FAF694362A972A6370D32B /* EditorView.swift */,
+				98B120A42C43D20C91A07221 /* MarkdownPreview.swift */,
+				818613C21C76992EED9A62E8 /* SidebarView.swift */,
+			);
+			path = UI;
+			sourceTree = "<group>";
+		};
+		83162A8E0E2AE629A0887B6F /* Panel */ = {
+			isa = PBXGroup;
+			children = (
+				C7C69F16DF01DB38768E671C /* PanelController.swift */,
+				90A6D02B02A4A8CCDA76861F /* SlidingPanel.swift */,
+			);
+			path = Panel;
+			sourceTree = "<group>";
+		};
+		DA4626E64118EA1DE9909CC3 /* Hotkey */ = {
+			isa = PBXGroup;
+			children = (
+				1C70ADEEEC6866BBDAA2AFF9 /* GlobalHotkey.swift */,
+			);
+			path = Hotkey;
+			sourceTree = "<group>";
+		};
+		F425D8FDCB773F1D442568CB /* Storage */ = {
+			isa = PBXGroup;
+			children = (
+				DCB1D56572D7023AE51D5C5F /* FolderWatcher.swift */,
+				63D9AFF1DD159A1FB2B27F07 /* NoteNode.swift */,
+				668F727AE15506978DDC28A6 /* NotesStore.swift */,
+			);
+			path = Storage;
+			sourceTree = "<group>";
+		};
+/* End PBXGroup section */
+
+/* Begin PBXNativeTarget section */
+		EED2F11C24682039AF932563 /* PocketNotes */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = F432AA42A60721216E71F43D /* Build configuration list for PBXNativeTarget "PocketNotes" */;
+			buildPhases = (
+				2D0B856A1A24FD71B8981C63 /* Sources */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+			);
+			name = PocketNotes;
+			packageProductDependencies = (
+			);
+			productName = PocketNotes;
+			productReference = 9DBCB2EB02C786FFCE884708 /* PocketNotes.app */;
+			productType = "com.apple.product-type.application";
+		};
+/* End PBXNativeTarget section */
+
+/* Begin PBXProject section */
+		FF19CA8171414ADDEB012067 /* Project object */ = {
+			isa = PBXProject;
+			attributes = {
+				BuildIndependentTargetsInParallel = YES;
+				LastUpgradeCheck = 1600;
+				TargetAttributes = {
+					EED2F11C24682039AF932563 = {
+						DevelopmentTeam = "";
+						ProvisioningStyle = Automatic;
+					};
+				};
+			};
+			buildConfigurationList = 8EF71C8C413622149E9CFFF5 /* Build configuration list for PBXProject "PocketNotes" */;
+			developmentRegion = en;
+			hasScannedForEncodings = 0;
+			knownRegions = (
+				Base,
+				en,
+			);
+			mainGroup = 132B6DD81111DEE073294570;
+			minimizedProjectReferenceProxies = 1;
+			preferredProjectObjectVersion = 77;
+			productRefGroup = 452B94D7AFCD53862144D403 /* Products */;
+			projectDirPath = "";
+			projectRoot = "";
+			targets = (
+				EED2F11C24682039AF932563 /* PocketNotes */,
+			);
+		};
+/* End PBXProject section */
+
+/* Begin PBXSourcesBuildPhase section */
+		2D0B856A1A24FD71B8981C63 /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				6917412E0B741C795BF4720C /* AppDelegate.swift in Sources */,
+				B4033D52606DA001345ADE7D /* ContentView.swift in Sources */,
+				C587FDBB069FF5D320126975 /* EditorView.swift in Sources */,
+				CCED5D3DEE3C084ACD4D57ED /* FolderWatcher.swift in Sources */,
+				02FEB9B4009D14C219615351 /* GlobalHotkey.swift in Sources */,
+				0C83DF68A9D29D2DCF73B257 /* MarkdownPreview.swift in Sources */,
+				11C97685686FC00D8CD5468B /* NoteNode.swift in Sources */,
+				2FAAA07A6B8B787D451A12BE /* NotesStore.swift in Sources */,
+				988EA10B51C40C8AFD74FE85 /* PanelController.swift in Sources */,
+				91FDD525F362F1F721C8B711 /* PocketNotesApp.swift in Sources */,
+				C389533195135CF450B1E858 /* SettingsView.swift in Sources */,
+				8F286E6C807DBE806DE921A5 /* SidebarView.swift in Sources */,
+				9464B83426D82B33B10E94B0 /* SlidingPanel.swift in Sources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXSourcesBuildPhase section */
+
+/* Begin XCBuildConfiguration section */
+		03C74FCF722A86B799A4D56E /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ALWAYS_SEARCH_USER_PATHS = NO;
+				CLANG_ANALYZER_NONNULL = YES;
+				CLANG_ANALYZER_NUMBER_OBJECT_CONVERSION = YES_AGGRESSIVE;
+				CLANG_CXX_LANGUAGE_STANDARD = "gnu++14";
+				CLANG_CXX_LIBRARY = "libc++";
+				CLANG_ENABLE_MODULES = YES;
+				CLANG_ENABLE_OBJC_ARC = YES;
+				CLANG_ENABLE_OBJC_WEAK = YES;
+				CLANG_WARN_BLOCK_CAPTURE_AUTORELEASING = YES;
+				CLANG_WARN_BOOL_CONVERSION = YES;
+				CLANG_WARN_COMMA = YES;
+				CLANG_WARN_CONSTANT_CONVERSION = YES;
+				CLANG_WARN_DEPRECATED_OBJC_IMPLEMENTATIONS = YES;
+				CLANG_WARN_DIRECT_OBJC_ISA_USAGE = YES_ERROR;
+				CLANG_WARN_DOCUMENTATION_COMMENTS = YES;
+				CLANG_WARN_EMPTY_BODY = YES;
+				CLANG_WARN_ENUM_CONVERSION = YES;
+				CLANG_WARN_INFINITE_RECURSION = YES;
+				CLANG_WARN_INT_CONVERSION = YES;
+				CLANG_WARN_NON_LITERAL_NULL_CONVERSION = YES;
+				CLANG_WARN_OBJC_IMPLICIT_RETAIN_SELF = YES;
+				CLANG_WARN_OBJC_LITERAL_CONVERSION = YES;
+				CLANG_WARN_OBJC_ROOT_CLASS = YES_ERROR;
+				CLANG_WARN_QUOTED_INCLUDE_IN_FRAMEWORK_HEADER = YES;
+				CLANG_WARN_RANGE_LOOP_ANALYSIS = YES;
+				CLANG_WARN_STRICT_PROTOTYPES = YES;
+				CLANG_WARN_SUSPICIOUS_MOVE = YES;
+				CLANG_WARN_UNGUARDED_AVAILABILITY = YES_AGGRESSIVE;
+				CLANG_WARN_UNREACHABLE_CODE = YES;
+				CLANG_WARN__DUPLICATE_METHOD_MATCH = YES;
+				CODE_SIGN_IDENTITY = "-";
+				CODE_SIGN_STYLE = Automatic;
+				COPY_PHASE_STRIP = NO;
+				CURRENT_PROJECT_VERSION = 1;
+				DEBUG_INFORMATION_FORMAT = dwarf;
+				DEVELOPMENT_TEAM = "";
+				ENABLE_STRICT_OBJC_MSGSEND = YES;
+				ENABLE_TESTABILITY = YES;
+				GCC_C_LANGUAGE_STANDARD = gnu11;
+				GCC_DYNAMIC_NO_PIC = NO;
+				GCC_NO_COMMON_BLOCKS = YES;
+				GCC_OPTIMIZATION_LEVEL = 0;
+				GCC_PREPROCESSOR_DEFINITIONS = (
+					"$(inherited)",
+					"DEBUG=1",
+				);
+				GCC_WARN_64_TO_32_BIT_CONVERSION = YES;
+				GCC_WARN_ABOUT_RETURN_TYPE = YES_ERROR;
+				GCC_WARN_UNDECLARED_SELECTOR = YES;
+				GCC_WARN_UNINITIALIZED_AUTOS = YES_AGGRESSIVE;
+				GCC_WARN_UNUSED_FUNCTION = YES;
+				GCC_WARN_UNUSED_VARIABLE = YES;
+				MACOSX_DEPLOYMENT_TARGET = 14.0;
+				MARKETING_VERSION = 0.1.0;
+				MTL_ENABLE_DEBUG_INFO = INCLUDE_SOURCE;
+				MTL_FAST_MATH = YES;
+				ONLY_ACTIVE_ARCH = YES;
+				PRODUCT_BUNDLE_IDENTIFIER = com.ryandia.PocketNotes;
+				PRODUCT_NAME = PocketNotes;
+				SDKROOT = macosx;
+				SWIFT_ACTIVE_COMPILATION_CONDITIONS = DEBUG;
+				SWIFT_OPTIMIZATION_LEVEL = "-Onone";
+				SWIFT_VERSION = 5.10;
+			};
+			name = Debug;
+		};
+		14E5E20ED0B6307F2770FC26 /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ALWAYS_SEARCH_USER_PATHS = NO;
+				CLANG_ANALYZER_NONNULL = YES;
+				CLANG_ANALYZER_NUMBER_OBJECT_CONVERSION = YES_AGGRESSIVE;
+				CLANG_CXX_LANGUAGE_STANDARD = "gnu++14";
+				CLANG_CXX_LIBRARY = "libc++";
+				CLANG_ENABLE_MODULES = YES;
+				CLANG_ENABLE_OBJC_ARC = YES;
+				CLANG_ENABLE_OBJC_WEAK = YES;
+				CLANG_WARN_BLOCK_CAPTURE_AUTORELEASING = YES;
+				CLANG_WARN_BOOL_CONVERSION = YES;
+				CLANG_WARN_COMMA = YES;
+				CLANG_WARN_CONSTANT_CONVERSION = YES;
+				CLANG_WARN_DEPRECATED_OBJC_IMPLEMENTATIONS = YES;
+				CLANG_WARN_DIRECT_OBJC_ISA_USAGE = YES_ERROR;
+				CLANG_WARN_DOCUMENTATION_COMMENTS = YES;
+				CLANG_WARN_EMPTY_BODY = YES;
+				CLANG_WARN_ENUM_CONVERSION = YES;
+				CLANG_WARN_INFINITE_RECURSION = YES;
+				CLANG_WARN_INT_CONVERSION = YES;
+				CLANG_WARN_NON_LITERAL_NULL_CONVERSION = YES;
+				CLANG_WARN_OBJC_IMPLICIT_RETAIN_SELF = YES;
+				CLANG_WARN_OBJC_LITERAL_CONVERSION = YES;
+				CLANG_WARN_OBJC_ROOT_CLASS = YES_ERROR;
+				CLANG_WARN_QUOTED_INCLUDE_IN_FRAMEWORK_HEADER = YES;
+				CLANG_WARN_RANGE_LOOP_ANALYSIS = YES;
+				CLANG_WARN_STRICT_PROTOTYPES = YES;
+				CLANG_WARN_SUSPICIOUS_MOVE = YES;
+				CLANG_WARN_UNGUARDED_AVAILABILITY = YES_AGGRESSIVE;
+				CLANG_WARN_UNREACHABLE_CODE = YES;
+				CLANG_WARN__DUPLICATE_METHOD_MATCH = YES;
+				CODE_SIGN_IDENTITY = "-";
+				CODE_SIGN_STYLE = Automatic;
+				COPY_PHASE_STRIP = NO;
+				CURRENT_PROJECT_VERSION = 1;
+				DEBUG_INFORMATION_FORMAT = "dwarf-with-dsym";
+				DEVELOPMENT_TEAM = "";
+				ENABLE_NS_ASSERTIONS = NO;
+				ENABLE_STRICT_OBJC_MSGSEND = YES;
+				GCC_C_LANGUAGE_STANDARD = gnu11;
+				GCC_NO_COMMON_BLOCKS = YES;
+				GCC_WARN_64_TO_32_BIT_CONVERSION = YES;
+				GCC_WARN_ABOUT_RETURN_TYPE = YES_ERROR;
+				GCC_WARN_UNDECLARED_SELECTOR = YES;
+				GCC_WARN_UNINITIALIZED_AUTOS = YES_AGGRESSIVE;
+				GCC_WARN_UNUSED_FUNCTION = YES;
+				GCC_WARN_UNUSED_VARIABLE = YES;
+				MACOSX_DEPLOYMENT_TARGET = 14.0;
+				MARKETING_VERSION = 0.1.0;
+				MTL_ENABLE_DEBUG_INFO = NO;
+				MTL_FAST_MATH = YES;
+				PRODUCT_BUNDLE_IDENTIFIER = com.ryandia.PocketNotes;
+				PRODUCT_NAME = PocketNotes;
+				SDKROOT = macosx;
+				SWIFT_COMPILATION_MODE = wholemodule;
+				SWIFT_OPTIMIZATION_LEVEL = "-O";
+				SWIFT_VERSION = 5.10;
+			};
+			name = Release;
+		};
+		37A39A6885AAFBD857787283 /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
+				CODE_SIGN_ENTITLEMENTS = PocketNotes/PocketNotes.entitlements;
+				COMBINE_HIDPI_IMAGES = YES;
+				INFOPLIST_FILE = PocketNotes/Info.plist;
+				LD_RUNPATH_SEARCH_PATHS = (
+					"$(inherited)",
+					"@executable_path/../Frameworks",
+				);
+				MACOSX_DEPLOYMENT_TARGET = 14.0;
+				SDKROOT = macosx;
+			};
+			name = Debug;
+		};
+		B11CCA6C4DE6DBE5DECAFB68 /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
+				CODE_SIGN_ENTITLEMENTS = PocketNotes/PocketNotes.entitlements;
+				COMBINE_HIDPI_IMAGES = YES;
+				INFOPLIST_FILE = PocketNotes/Info.plist;
+				LD_RUNPATH_SEARCH_PATHS = (
+					"$(inherited)",
+					"@executable_path/../Frameworks",
+				);
+				MACOSX_DEPLOYMENT_TARGET = 14.0;
+				SDKROOT = macosx;
+			};
+			name = Release;
+		};
+/* End XCBuildConfiguration section */
+
+/* Begin XCConfigurationList section */
+		8EF71C8C413622149E9CFFF5 /* Build configuration list for PBXProject "PocketNotes" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				03C74FCF722A86B799A4D56E /* Debug */,
+				14E5E20ED0B6307F2770FC26 /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Debug;
+		};
+		F432AA42A60721216E71F43D /* Build configuration list for PBXNativeTarget "PocketNotes" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				37A39A6885AAFBD857787283 /* Debug */,
+				B11CCA6C4DE6DBE5DECAFB68 /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Debug;
+		};
+/* End XCConfigurationList section */
+	};
+	rootObject = FF19CA8171414ADDEB012067 /* Project object */;
+}

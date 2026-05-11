@@ -1,0 +1,47 @@
+name: PocketNotes
+options:
+  bundleIdPrefix: com.ryandia
+  deploymentTarget:
+    macOS: "14.0"
+  xcodeVersion: "16.0"
+  generateEmptyDirectories: true
+
+settings:
+  base:
+    SWIFT_VERSION: "5.10"
+    MACOSX_DEPLOYMENT_TARGET: "14.0"
+    PRODUCT_BUNDLE_IDENTIFIER: com.ryandia.PocketNotes
+    PRODUCT_NAME: PocketNotes
+    MARKETING_VERSION: "0.1.0"
+    CURRENT_PROJECT_VERSION: "1"
+    CODE_SIGN_STYLE: Automatic
+    CODE_SIGN_IDENTITY: "-"
+    DEVELOPMENT_TEAM: ""
+
+targets:
+  PocketNotes:
+    type: application
+    platform: macOS
+    deploymentTarget: "14.0"
+    sources:
+      - path: PocketNotes
+        excludes:
+          - "**/*.plist"
+    info:
+      path: PocketNotes/Info.plist
+      properties:
+        CFBundleName: PocketNotes
+        CFBundleDisplayName: PocketNotes
+        CFBundleIdentifier: com.ryandia.PocketNotes
+        CFBundleVersion: "1"
+        CFBundleShortVersionString: "0.1.0"
+        NSPrincipalClass: NSApplication
+        LSMinimumSystemVersion: "14.0"
+        LSUIElement: true
+        NSHumanReadableCopyright: "Copyright © 2026 Ryan-Dia. All rights reserved."
+        CFBundleIconFile: AppIcon
+    entitlements:
+      path: PocketNotes/PocketNotes.entitlements
+    settings:
+      base:
+        CODE_SIGN_ENTITLEMENTS: PocketNotes/PocketNotes.entitlements
