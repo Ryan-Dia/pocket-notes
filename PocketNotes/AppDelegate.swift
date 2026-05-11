@@ -6,10 +6,10 @@ final class AppDelegate: NSObject, NSApplicationDelegate {
     private var panelController: PanelController?
     private var statusItem: NSStatusItem?
     private var hotkey: GlobalHotkey?
+    private var contextMenu: NSMenu?
 
     func applicationDidFinishLaunching(_ notification: Notification) {
         NSApp.setActivationPolicy(.accessory)
-
         setupMenuBar()
         setupPanel()
         setupHotkey()
@@ -18,19 +18,23 @@ final class AppDelegate: NSObject, NSApplicationDelegate {
     private func setupMenuBar() {
         statusItem = NSStatusBar.system.statusItem(withLength: NSStatusItem.squareLength)
         guard let button = statusItem?.button else { return }
-        button.image = NSImage(systemSymbolName: "note.text", accessibilityDescription: "PocketNotes")
-        button.image?.isTemplate = true
-        button.action = #selector(togglePanel)
+
+        let img = NSImage(systemSymbolName: "note.text", accessibilityDescription: "PocketNotes")
+        img?.isTemplate = true
+        button.image = img
+
+        // 좌클릭 = 패널 토글, 우클릭 = 컨텍스트 메뉴
+        button.sendAction(on: [.leftMouseUp, .rightMouseUp])
+        button.action = #selector(handleStatusItemClick)
         button.target = self
 
         let menu = NSMenu()
-        menu.addItem(NSMenuItem(title: "PocketNotes 열기", action: #selector(togglePanel), keyEquivalent: ""))
+        menu.addItem(NSMenuItem(title: "PocketNotes 열기", action: #selector(showPanel), keyEquivalent: ""))
         menu.addItem(.separator())
         menu.addItem(NSMenuItem(title: "설정...", action: #selector(openSettings), keyEquivalent: ","))
         menu.addItem(.separator())
         menu.addItem(NSMenuItem(title: "종료", action: #selector(NSApplication.terminate(_:)), keyEquivalent: "q"))
-
-        statusItem?.menu = menu
+        contextMenu = menu
     }
 
     private func setupPanel() {
@@ -40,18 +44,33 @@ final class AppDelegate: NSObject, NSApplicationDelegate {
     }
 
     private func setupHotkey() {
-        hotkey = GlobalHotkey {
-            self.togglePanel()
+        hotkey = GlobalHotkey { [weak self] in
+            self?.togglePanel()
+        }
+    }
+
+    @objc private func handleStatusItemClick() {
+        guard let event = NSApp.currentEvent else { return }
+        if event.type == .rightMouseUp {
+            statusItem?.menu = contextMenu
+            statusItem?.button?.performClick(nil)
+            DispatchQueue.main.async { [weak self] in
+                self?.statusItem?.menu = nil
+            }
+        } else {
+            togglePanel()
         }
     }
 
     @objc func togglePanel() {
-        statusItem?.menu = nil
-        statusItem?.button?.action = #selector(togglePanel)
         panelController?.toggle()
     }
 
-    @objc func openSettings() {
+    @objc private func showPanel() {
+        panelController?.show()
+    }
+
+    @objc private func openSettings() {
         NSApp.sendAction(Selector(("showSettingsWindow:")), to: nil, from: nil)
         NSApp.activate(ignoringOtherApps: true)
     }

@@ -18,18 +18,22 @@ final class NotesStore: ObservableObject {
         set {
             UserDefaults.standard.set(newValue.path, forKey: "rootFolderPath")
             reload()
+            restartWatching()
         }
     }
 
     init() {
         ensureRootExists()
         reload()
-        startWatching()
+        restartWatching()
     }
 
     func reload() {
+        let previousURL = selectedNode?.url
         roots = loadChildren(at: rootURL)
-        startWatching()
+        if let url = previousURL {
+            selectedNode = findNode(url: url, in: roots)
+        }
     }
 
     private func ensureRootExists() {
@@ -47,11 +51,11 @@ final class NotesStore: ObservableObject {
             .sorted { $0.lastPathComponent < $1.lastPathComponent }
             .compactMap { fileURL -> NoteNode? in
                 let isDir = (try? fileURL.resourceValues(forKeys: [.isDirectoryKey]))?.isDirectory ?? false
-                let name = fileURL.deletingPathExtension().lastPathComponent
                 if isDir {
                     let children = loadChildren(at: fileURL)
                     return NoteNode(url: fileURL, name: fileURL.lastPathComponent, children: children)
                 } else if fileURL.pathExtension == "md" {
+                    let name = fileURL.deletingPathExtension().lastPathComponent
                     return NoteNode(url: fileURL, name: name)
                 }
                 return nil
@@ -70,7 +74,7 @@ final class NotesStore: ObservableObject {
         }
         try? "".write(to: target, atomically: true, encoding: .utf8)
         reload()
-        selectNode(withURL: target)
+        selectedNode = findNode(url: target, in: roots)
     }
 
     func createFolder(in parent: NoteNode? = nil, name: String = "새 폴더") {
@@ -86,8 +90,8 @@ final class NotesStore: ObservableObject {
     }
 
     func delete(_ node: NoteNode) {
+        if selectedNode?.url == node.url { selectedNode = nil }
         try? FileManager.default.trashItem(at: node.url, resultingItemURL: nil)
-        if selectedNode?.id == node.id { selectedNode = nil }
         reload()
     }
 
@@ -96,6 +100,9 @@ final class NotesStore: ObservableObject {
         let newURL = node.url.deletingLastPathComponent().appendingPathComponent(newName + ext)
         try? FileManager.default.moveItem(at: node.url, to: newURL)
         reload()
+        if selectedNode?.url == node.url {
+            selectedNode = findNode(url: newURL, in: roots)
+        }
     }
 
     func readContent(of node: NoteNode) -> String {
@@ -106,9 +113,7 @@ final class NotesStore: ObservableObject {
         try? content.write(to: node.url, atomically: true, encoding: .utf8)
     }
 
-    private func selectNode(withURL url: URL) {
-        selectedNode = findNode(url: url, in: roots)
-    }
+    // MARK: - Private
 
     private func findNode(url: URL, in nodes: [NoteNode]) -> NoteNode? {
         for node in nodes {
@@ -118,7 +123,7 @@ final class NotesStore: ObservableObject {
         return nil
     }
 
-    private func startWatching() {
+    private func restartWatching() {
         watcher = FolderWatcher(url: rootURL) { [weak self] in
             DispatchQueue.main.async { self?.reload() }
         }
