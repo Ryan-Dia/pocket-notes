@@ -1,7 +1,7 @@
 import Foundation
 
 final class NoteNode: Identifiable, ObservableObject {
-    let id: UUID
+    var id: String { url.path }
     let url: URL
     @Published var name: String
     @Published var children: [NoteNode]?
@@ -9,7 +9,6 @@ final class NoteNode: Identifiable, ObservableObject {
     var isFolder: Bool { children != nil }
 
     init(url: URL, name: String, children: [NoteNode]? = nil) {
-        self.id = UUID()
         self.url = url
         self.name = name
         self.children = children
@@ -17,6 +16,6 @@ final class NoteNode: Identifiable, ObservableObject {
 }
 
 extension NoteNode: Hashable {
-    static func == (lhs: NoteNode, rhs: NoteNode) -> Bool { lhs.id == rhs.id }
-    func hash(into hasher: inout Hasher) { hasher.combine(id) }
+    static func == (lhs: NoteNode, rhs: NoteNode) -> Bool { lhs.url == rhs.url }
+    func hash(into hasher: inout Hasher) { hasher.combine(url) }
 }

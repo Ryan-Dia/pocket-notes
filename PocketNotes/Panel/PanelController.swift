@@ -19,6 +19,7 @@ final class PanelController {
     init(contentView: AnyView) {
         panel = SlidingPanel()
         let hostingView = NSHostingView(rootView: contentView)
+        hostingView.sizingOptions = []   // SwiftUI preferred size 무시, 패널 크기를 따름
         hostingView.autoresizingMask = [.width, .height]
         panel.contentView = hostingView
 
@@ -42,11 +43,10 @@ final class PanelController {
 
     func show() {
         guard let screen = NSScreen.main else { return }
-        let visibleFrame = screen.visibleFrame
-
-        let hiddenFrame = hiddenRect(for: screen)
         let shownFrame = shownRect(for: screen)
+        let hiddenFrame = hiddenRect(for: screen)
 
+        // 먼저 올바른 높이로 화면 밖에서 시작
         panel.setFrame(hiddenFrame, display: false)
         panel.orderFront(nil)
 
@@ -56,7 +56,6 @@ final class PanelController {
             panel.animator().setFrame(shownFrame, display: true)
         }
         isVisible = true
-        _ = visibleFrame
     }
 
     func hide() {
