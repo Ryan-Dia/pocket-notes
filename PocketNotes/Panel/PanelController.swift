@@ -53,6 +53,7 @@ final class PanelController {
         let shownFrame = shownRect(for: screen)
         let hiddenFrame = hiddenRect(for: screen)
 
+        panel.alphaValue = 0  // orderFront 전 투명으로 — 옆 모니터에 순간 노출 방지
         panel.setFrame(hiddenFrame, display: false)
         panel.orderFront(nil)
 
@@ -60,6 +61,7 @@ final class PanelController {
             ctx.duration = 0.22
             ctx.timingFunction = CAMediaTimingFunction(name: .easeOut)
             panel.animator().setFrame(shownFrame, display: true)
+            panel.animator().alphaValue = 1
         }
         isVisible = true
     }
@@ -73,8 +75,10 @@ final class PanelController {
             ctx.duration = 0.18
             ctx.timingFunction = CAMediaTimingFunction(name: .easeIn)
             panel.animator().setFrame(hiddenFrame ?? panel.frame, display: true)
+            panel.animator().alphaValue = 0
         }, completionHandler: {
             self.panel.orderOut(nil)
+            self.panel.alphaValue = 1  // 다음 show()를 위해 초기화
             self.activeScreen = nil
         })
         isVisible = false
