@@ -6,12 +6,17 @@ struct FolderListView: View {
 
     @State private var renaming: NoteNode? = nil
     @State private var renameText = ""
+    @State private var searchQuery = ""
+    @State private var isSearching = false
 
     private var folders: [NoteNode] { store.roots.filter { $0.isFolder } }
 
     var body: some View {
         VStack(spacing: 0) {
             header
+            if isSearching {
+                searchBar
+            }
             Divider().opacity(0.25)
             folderList
         }
@@ -24,6 +29,16 @@ struct FolderListView: View {
                 .font(.system(size: 22, weight: .bold))
                 .foregroundStyle(PNTheme.heading)
             Spacer()
+            Button {
+                withAnimation(.easeInOut(duration: 0.15)) { isSearching.toggle() }
+            } label: {
+                Image(systemName: isSearching ? "xmark.circle.fill" : "magnifyingglass")
+                    .font(.system(size: 16, weight: .medium))
+                    .foregroundStyle(PNTheme.accent)
+            }
+            .buttonStyle(.plain)
+            .padding(.trailing, 10)
+
             Button { store.createFolder() } label: {
                 Image(systemName: "plus")
                     .font(.system(size: 18, weight: .semibold))
@@ -36,10 +51,31 @@ struct FolderListView: View {
         .padding(.bottom, 14)
     }
 
+    private var searchBar: some View {
+        HStack(spacing: 8) {
+            Image(systemName: "magnifyingglass")
+                .font(.system(size: 13))
+                .foregroundStyle(.tertiary)
+            TextField("폴더 검색...", text: $searchQuery)
+                .font(.system(size: 14))
+        }
+        .padding(.horizontal, 12)
+        .padding(.vertical, 8)
+        .background(PNTheme.card)
+        .clipShape(RoundedRectangle(cornerRadius: 8))
+        .padding(.horizontal, 12)
+        .padding(.bottom, 6)
+    }
+
+    private var filteredFolders: [NoteNode] {
+        if searchQuery.isEmpty { return folders }
+        return folders.filter { $0.name.localizedCaseInsensitiveContains(searchQuery) }
+    }
+
     private var folderList: some View {
         ScrollView {
             LazyVStack(spacing: 0) {
-                ForEach(folders) { node in
+                ForEach(filteredFolders) { node in
                     if renaming?.id == node.id {
                         renameRow(for: node)
                     } else {
@@ -49,29 +85,42 @@ struct FolderListView: View {
                         .opacity(0.2)
                         .padding(.leading, 56)
                 }
-                if folders.isEmpty { emptyHint }
+                if filteredFolders.isEmpty { emptyHint }
             }
         }
     }
 
     private func folderRow(for node: NoteNode) -> some View {
         let noteCount = node.children?.filter { !$0.isFolder }.count ?? 0
+        let preview = recentNotePreview(in: node)
         return HStack(spacing: 14) {
             Image(systemName: "folder")
                 .font(.system(size: 20))
                 .foregroundStyle(PNTheme.accent)
                 .frame(width: 28)
-            Text(node.name)
-                .font(.system(size: 16))
-                .foregroundStyle(.primary)
-                .lineLimit(1)
+            VStack(alignment: .leading, spacing: 2) {
+                Text(node.name)
+                    .font(.system(size: 16))
+                    .foregroundStyle(.primary)
+                    .lineLimit(1)
+                if let preview {
+                    Text(preview)
+                        .font(.system(size: 12))
+                        .foregroundStyle(.secondary)
+                        .lineLimit(1)
+                }
+            }
             Spacer()
             Text("\(noteCount)")
-                .font(.system(size: 14))
-                .foregroundStyle(.secondary)
+                .font(.system(size: 13, weight: .medium))
+                .foregroundStyle(.white)
+                .padding(.horizontal, 7)
+                .padding(.vertical, 2)
+                .background(PNTheme.accent.opacity(0.7))
+                .clipShape(Capsule())
         }
         .padding(.horizontal, 16)
-        .padding(.vertical, 14)
+        .padding(.vertical, 12)
         .contentShape(Rectangle())
         .background(PNTheme.bg)
         .onTapGesture { onSelectFolder(node) }
@@ -103,6 +152,21 @@ struct FolderListView: View {
         }
         .padding(.horizontal, 16)
         .padding(.vertical, 14)
+    }
+
+    private func recentNotePreview(in folder: NoteNode) -> String? {
+        guard let notes = folder.children?.filter({ !$0.isFolder }), !notes.isEmpty else { return nil }
+        let sorted = notes.sorted {
+            let a = (try? $0.url.resourceValues(forKeys: [.contentModificationDateKey]).contentModificationDate) ?? .distantPast
+            let b = (try? $1.url.resourceValues(forKeys: [.contentModificationDateKey]).contentModificationDate) ?? .distantPast
+            return a > b
+        }
+        guard let url = sorted.first?.url,
+              let content = try? String(contentsOf: url, encoding: .utf8) else { return nil }
+        let firstLine = content.components(separatedBy: "\n")
+            .first(where: { !$0.trimmingCharacters(in: .whitespaces).isEmpty })
+        guard let line = firstLine?.trimmingCharacters(in: .whitespaces), !line.isEmpty else { return nil }
+        return line
     }
 
     private var emptyHint: some View {

@@ -9,9 +9,10 @@ final class PanelController {
     private let panel: SlidingPanel
     private var isVisible = false
     private var resignObserver: NSObjectProtocol?
+    private var activeScreen: NSScreen?  // show() 시점의 화면을 고정
 
     var edge: PanelEdge {
-        get { PanelEdge(rawValue: UserDefaults.standard.string(forKey: "panelEdge") ?? "right") ?? .right }
+        PanelEdge(rawValue: UserDefaults.standard.string(forKey: "panelEdge") ?? "right") ?? .right
     }
 
     var panelWidth: CGFloat { 320 }
@@ -19,7 +20,7 @@ final class PanelController {
     init(contentView: AnyView) {
         panel = SlidingPanel()
         let hostingView = NSHostingView(rootView: contentView)
-        hostingView.sizingOptions = []   // SwiftUI preferred size 무시, 패널 크기를 따름
+        hostingView.sizingOptions = []
         hostingView.autoresizingMask = [.width, .height]
         panel.contentView = hostingView
 
@@ -42,11 +43,12 @@ final class PanelController {
     }
 
     func show() {
-        guard let screen = NSScreen.main else { return }
+        // show() 시점의 화면을 고정 — 이후 hide()도 같은 화면 좌표 사용
+        activeScreen = NSScreen.main
+        guard let screen = activeScreen else { return }
         let shownFrame = shownRect(for: screen)
         let hiddenFrame = hiddenRect(for: screen)
 
-        // 먼저 올바른 높이로 화면 밖에서 시작
         panel.setFrame(hiddenFrame, display: false)
         panel.orderFront(nil)
 
@@ -60,7 +62,9 @@ final class PanelController {
 
     func hide() {
         guard isVisible else { return }
-        let hiddenFrame = hiddenRect(for: NSScreen.main)
+        // show() 때 고정한 화면 사용, 없으면 현재 main
+        let screen = activeScreen ?? NSScreen.main
+        let hiddenFrame = hiddenRect(for: screen)
 
         NSAnimationContext.runAnimationGroup({ ctx in
             ctx.duration = 0.18
@@ -68,6 +72,7 @@ final class PanelController {
             panel.animator().setFrame(hiddenFrame ?? panel.frame, display: true)
         }, completionHandler: {
             self.panel.orderOut(nil)
+            self.activeScreen = nil
         })
         isVisible = false
     }

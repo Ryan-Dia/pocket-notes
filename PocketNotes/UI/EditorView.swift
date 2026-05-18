@@ -36,7 +36,7 @@ struct NoteCardsView: View {
         }
         .background(PNTheme.bg)
         .onAppear { if folder == nil { onBack() } }
-        .onChange(of: folder == nil) { isNil in
+        .onChange(of: folder == nil) { _, isNil in
             if isNil { onBack() }
         }
     }
@@ -101,6 +101,7 @@ struct NoteCardView: View {
 
     @State private var text = ""
     @State private var saveTimer: AnyCancellable?
+    @FocusState private var isFocused: Bool
 
     private var dateString: String {
         let res = try? note.url.resourceValues(forKeys: [.contentModificationDateKey])
@@ -111,61 +112,76 @@ struct NoteCardView: View {
         return f.string(from: date)
     }
 
+    // 첫 줄 제목 / 나머지 본문 분리
+    private var titleLine: String {
+        let lines = text.components(separatedBy: "\n")
+        return lines.first(where: { !$0.trimmingCharacters(in: .whitespaces).isEmpty }) ?? ""
+    }
+
     var body: some View {
-        VStack(alignment: .leading, spacing: 0) {
-            ZStack(alignment: .topLeading) {
-                if text.isEmpty {
-                    Text("노트를 작성하세요...")
+        HStack(spacing: 0) {
+            // 왼쪽 액센트 스트립
+            Rectangle()
+                .fill(isFocused ? PNTheme.accent : PNTheme.accent.opacity(0.35))
+                .frame(width: 3)
+                .animation(.easeInOut(duration: 0.15), value: isFocused)
+
+            VStack(alignment: .leading, spacing: 0) {
+                ZStack(alignment: .topLeading) {
+                    if text.isEmpty {
+                        Text("노트를 작성하세요...")
+                            .font(.system(size: 14))
+                            .foregroundStyle(.tertiary)
+                            .padding(.horizontal, 16)
+                            .padding(.top, 12)
+                            .allowsHitTesting(false)
+                    }
+                    TextEditor(text: $text)
                         .font(.system(size: 14))
-                        .foregroundStyle(.tertiary)
-                        .padding(.horizontal, 16)
-                        .padding(.top, 12)
-                        .allowsHitTesting(false)
+                        .scrollContentBackground(.hidden)
+                        .background(.clear)
+                        .frame(minHeight: 90)
+                        .padding(.horizontal, 12)
+                        .padding(.top, 8)
+                        .padding(.bottom, 4)
+                        .focused($isFocused)
                 }
-                TextEditor(text: $text)
-                    .font(.system(size: 14))
-                    .scrollContentBackground(.hidden)
-                    .background(.clear)
-                    .frame(minHeight: 80)
-                    .padding(.horizontal, 12)
-                    .padding(.top, 8)
-                    .padding(.bottom, 4)
-            }
 
-            Divider().opacity(0.15)
+                Divider().opacity(0.12)
 
-            HStack(spacing: 14) {
-                Image(systemName: "textformat")
-                    .font(.system(size: 13))
-                    .foregroundStyle(.secondary)
-
-                Spacer()
-
-                Text(dateString)
-                    .font(.system(size: 11))
-                    .foregroundStyle(.tertiary)
-                    .lineLimit(1)
-
-                Spacer()
-
-                Button {
-                    store.delete(note)
-                } label: {
-                    Image(systemName: "trash")
-                        .font(.system(size: 13))
+                HStack(spacing: 14) {
+                    Image(systemName: "textformat")
+                        .font(.system(size: 12))
                         .foregroundStyle(.secondary)
+
+                    Spacer()
+
+                    Text(dateString)
+                        .font(.system(size: 11))
+                        .foregroundStyle(.tertiary)
+                        .lineLimit(1)
+
+                    Spacer()
+
+                    Button {
+                        store.delete(note)
+                    } label: {
+                        Image(systemName: "trash")
+                            .font(.system(size: 12))
+                            .foregroundStyle(.secondary)
+                    }
+                    .buttonStyle(.plain)
                 }
-                .buttonStyle(.plain)
+                .padding(.horizontal, 14)
+                .padding(.vertical, 8)
             }
-            .padding(.horizontal, 14)
-            .padding(.vertical, 9)
         }
         .background(PNTheme.card)
-        .clipShape(RoundedRectangle(cornerRadius: 14))
-        .shadow(color: .black.opacity(0.07), radius: 5, x: 0, y: 2)
+        .clipShape(RoundedRectangle(cornerRadius: 12))
+        .shadow(color: .black.opacity(isFocused ? 0.12 : 0.06), radius: isFocused ? 8 : 4, x: 0, y: 2)
         .onAppear { text = store.readContent(of: note) }
-        .onChange(of: note.url) { _ in text = store.readContent(of: note) }
-        .onChange(of: text) { _ in scheduleSave() }
+        .onChange(of: note.url) { _, _ in text = store.readContent(of: note) }
+        .onChange(of: text) { scheduleSave() }
     }
 
     private func scheduleSave() {
