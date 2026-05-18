@@ -42,9 +42,13 @@ final class PanelController {
         isVisible ? hide() : show()
     }
 
+    private var mouseScreen: NSScreen {
+        let loc = NSEvent.mouseLocation
+        return NSScreen.screens.first(where: { $0.frame.contains(loc) }) ?? NSScreen.main ?? NSScreen.screens[0]
+    }
+
     func show() {
-        // show() 시점의 화면을 고정 — 이후 hide()도 같은 화면 좌표 사용
-        activeScreen = NSScreen.main
+        activeScreen = mouseScreen
         guard let screen = activeScreen else { return }
         let shownFrame = shownRect(for: screen)
         let hiddenFrame = hiddenRect(for: screen)
@@ -62,8 +66,7 @@ final class PanelController {
 
     func hide() {
         guard isVisible else { return }
-        // show() 때 고정한 화면 사용, 없으면 현재 main
-        let screen = activeScreen ?? NSScreen.main
+        let screen = activeScreen ?? mouseScreen
         let hiddenFrame = hiddenRect(for: screen)
 
         NSAnimationContext.runAnimationGroup({ ctx in
