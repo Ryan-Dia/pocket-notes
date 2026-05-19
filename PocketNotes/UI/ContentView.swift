@@ -9,34 +9,54 @@ enum PNTheme {
 
 struct ContentView: View {
     @EnvironmentObject var store: NotesStore
-    @State private var selectedFolderURL: URL? = nil
+    @State private var navigationStack: [NoteNode] = []
 
     var body: some View {
         ZStack {
             PNTheme.bg.ignoresSafeArea()
-            if let url = selectedFolderURL {
-                NoteCardsView(folderURL: url) {
-                    withAnimation(.easeInOut(duration: 0.18)) {
-                        selectedFolderURL = nil
-                    }
-                }
-                .transition(.asymmetric(
-                    insertion: .move(edge: .trailing),
-                    removal: .move(edge: .trailing)
-                ))
-            } else {
-                FolderListView { folder in
-                    withAnimation(.easeInOut(duration: 0.18)) {
-                        selectedFolderURL = folder.url
-                    }
-                }
-                .transition(.asymmetric(
-                    insertion: .move(edge: .leading),
-                    removal: .move(edge: .leading)
-                ))
-            }
+            currentView
+                .id(navigationStack.count)
         }
         .frame(maxWidth: .infinity, maxHeight: .infinity)
-        .animation(.easeInOut(duration: 0.18), value: selectedFolderURL != nil)
+        .animation(.easeInOut(duration: 0.18), value: navigationStack.count)
+    }
+
+    @ViewBuilder
+    private var currentView: some View {
+        if navigationStack.isEmpty {
+            FolderListView(onSelectFolder: handleSelectFolder)
+            .transition(.asymmetric(
+                insertion: .move(edge: .leading),
+                removal: .move(edge: .leading)
+            ))
+        } else {
+            FolderContentsView(
+                folder: navigationStack.last!,
+                onBack: handleBack,
+                onSelectSubfolder: handleSelectSubfolder
+            )
+            .transition(.asymmetric(
+                insertion: .move(edge: .trailing),
+                removal: .move(edge: .trailing)
+            ))
+        }
+    }
+
+    private func handleSelectFolder(_ folder: NoteNode) {
+        withAnimation(.easeInOut(duration: 0.18)) {
+            navigationStack.append(folder)
+        }
+    }
+
+    private func handleBack() {
+        withAnimation(.easeInOut(duration: 0.18)) {
+            navigationStack.removeLast()
+        }
+    }
+
+    private func handleSelectSubfolder(_ subfolder: NoteNode) {
+        withAnimation(.easeInOut(duration: 0.18)) {
+            navigationStack.append(subfolder)
+        }
     }
 }
