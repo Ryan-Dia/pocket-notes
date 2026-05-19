@@ -9,7 +9,7 @@ final class PanelController {
     private let panel: SlidingPanel
     private var isVisible = false
     private var resignObserver: NSObjectProtocol?
-    private var activeScreen: NSScreen?  // show() 시점의 화면을 고정
+    private var activeScreen: NSScreen?
 
     var edge: PanelEdge {
         PanelEdge(rawValue: UserDefaults.standard.string(forKey: "panelEdge") ?? "right") ?? .right
@@ -22,6 +22,7 @@ final class PanelController {
         let hostingView = NSHostingView(rootView: contentView)
         hostingView.sizingOptions = []
         hostingView.autoresizingMask = [.width, .height]
+        hostingView.wantsLayer = true
         panel.contentView = hostingView
 
         resignObserver = NotificationCenter.default.addObserver(
@@ -50,37 +51,43 @@ final class PanelController {
     func show() {
         activeScreen = mouseScreen
         guard let screen = activeScreen else { return }
-        let shownFrame = shownRect(for: screen)
-        let hiddenFrame = hiddenRect(for: screen)
 
-        panel.alphaValue = 0  // orderFront 전 투명으로 — 옆 모니터에 순간 노출 방지
-        panel.setFrame(hiddenFrame, display: false)
+        // 창은 항상 화면 안에 고정 — 옆 모니터 영역 침범 없음
+        panel.setFrame(shownRect(for: screen), display: false)
+
+        // 콘텐츠를 창 밖으로 밀기 (창이 클립하므로 화면에 안 보임)
+        let layer = panel.contentView?.layer
+        layer?.removeAllAnimations()
+        let offset = edge == .right ? panelWidth : -panelWidth
+        layer?.transform = CATransform3DMakeTranslation(offset, 0, 0)
         panel.orderFront(nil)
 
-        NSAnimationContext.runAnimationGroup { ctx in
-            ctx.duration = 0.22
-            ctx.timingFunction = CAMediaTimingFunction(name: .easeOut)
-            panel.animator().setFrame(shownFrame, display: true)
-            panel.animator().alphaValue = 1
-        }
+        CATransaction.begin()
+        CATransaction.setAnimationDuration(0.22)
+        CATransaction.setAnimationTimingFunction(CAMediaTimingFunction(name: .easeOut))
+        layer?.transform = CATransform3DIdentity
+        CATransaction.commit()
+
         isVisible = true
     }
 
     func hide() {
         guard isVisible else { return }
-        let screen = activeScreen ?? mouseScreen
-        let hiddenFrame = hiddenRect(for: screen)
+        let layer = panel.contentView?.layer
+        let offset = edge == .right ? panelWidth : -panelWidth
 
-        NSAnimationContext.runAnimationGroup({ ctx in
-            ctx.duration = 0.18
-            ctx.timingFunction = CAMediaTimingFunction(name: .easeIn)
-            panel.animator().setFrame(hiddenFrame, display: true)
-            panel.animator().alphaValue = 0
-        }, completionHandler: {
+        CATransaction.begin()
+        CATransaction.setAnimationDuration(0.18)
+        CATransaction.setAnimationTimingFunction(CAMediaTimingFunction(name: .easeIn))
+        CATransaction.setCompletionBlock {
             self.panel.orderOut(nil)
-            self.panel.alphaValue = 1  // 다음 show()를 위해 초기화
+            layer?.removeAllAnimations()
+            layer?.transform = CATransform3DIdentity
             self.activeScreen = nil
-        })
+        }
+        layer?.transform = CATransform3DMakeTranslation(offset, 0, 0)
+        CATransaction.commit()
+
         isVisible = false
     }
 
@@ -88,16 +95,6 @@ final class PanelController {
         guard let screen else { return .zero }
         let f = screen.visibleFrame
         let x: CGFloat = edge == .right ? f.maxX - panelWidth : f.minX
-        return NSRect(x: x, y: f.minY, width: panelWidth, height: f.height)
-    }
-
-    private func hiddenRect(for screen: NSScreen?) -> NSRect {
-        guard let screen else { return .zero }
-        let f = screen.visibleFrame
-        // 화면 내부에서 20pt 안쪽 시작 — 옆 모니터 영역 침범 없음
-        let x: CGFloat = edge == .right
-            ? f.maxX - panelWidth - 20
-            : f.minX + 20
         return NSRect(x: x, y: f.minY, width: panelWidth, height: f.height)
     }
 }
