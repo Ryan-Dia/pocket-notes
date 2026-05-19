@@ -118,7 +118,7 @@ final class NotesStore: ObservableObject {
         node.url.pathComponents.count - rootURL.pathComponents.count - 1
     }
 
-    // 폴더 존재 확인 (FolderContentsView의 삭제 감지용)
+    // URL로 노드 탐색 (FolderContentsView의 폴더 삭제 감지용)
     func findFolder(url: URL) -> NoteNode? {
         findNode(url: url, in: roots)
     }
