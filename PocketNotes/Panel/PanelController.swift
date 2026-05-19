@@ -74,7 +74,7 @@ final class PanelController {
         NSAnimationContext.runAnimationGroup({ ctx in
             ctx.duration = 0.18
             ctx.timingFunction = CAMediaTimingFunction(name: .easeIn)
-            panel.animator().setFrame(hiddenFrame ?? panel.frame, display: true)
+            panel.animator().setFrame(hiddenFrame, display: true)
             panel.animator().alphaValue = 0
         }, completionHandler: {
             self.panel.orderOut(nil)
@@ -94,7 +94,10 @@ final class PanelController {
     private func hiddenRect(for screen: NSScreen?) -> NSRect {
         guard let screen else { return .zero }
         let f = screen.visibleFrame
-        let x: CGFloat = edge == .right ? f.maxX : f.minX - panelWidth
+        // 화면 내부에서 20pt 안쪽 시작 — 옆 모니터 영역 침범 없음
+        let x: CGFloat = edge == .right
+            ? f.maxX - panelWidth - 20
+            : f.minX + 20
         return NSRect(x: x, y: f.minY, width: panelWidth, height: f.height)
     }
 }
