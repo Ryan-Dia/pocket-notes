@@ -113,6 +113,16 @@ final class NotesStore: ObservableObject {
         try? content.write(to: node.url, atomically: true, encoding: .utf8)
     }
 
+    // depth 계산: rootURL 기준 상대 깊이 (최상위 폴더=0, 상위=1, 하위=2)
+    func depth(of node: NoteNode) -> Int {
+        node.url.pathComponents.count - rootURL.pathComponents.count - 1
+    }
+
+    // 폴더 존재 확인 (FolderContentsView의 삭제 감지용)
+    func findFolder(url: URL) -> NoteNode? {
+        findNode(url: url, in: roots)
+    }
+
     // MARK: - Private
 
     private func findNode(url: URL, in nodes: [NoteNode]) -> NoteNode? {
