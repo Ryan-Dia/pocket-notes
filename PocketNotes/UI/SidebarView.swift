@@ -40,7 +40,7 @@ struct FolderListView: View {
             .padding(.trailing, 10)
 
             Button { store.createFolder() } label: {
-                Image(systemName: "plus")
+                Image(systemName: "folder.badge.plus")
                     .font(.system(size: 18, weight: .semibold))
                     .foregroundStyle(PNTheme.accent)
             }
@@ -126,6 +126,7 @@ struct FolderListView: View {
         .onTapGesture { onSelectFolder(node) }
         .contextMenu {
             Button("새 노트") { store.createNote(in: node) }
+            Button("새 하위 폴더") { store.createFolder(in: node) }
             Divider()
             Button("이름 변경") {
                 renameText = node.name
