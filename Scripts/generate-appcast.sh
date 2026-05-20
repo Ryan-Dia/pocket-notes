@@ -2,14 +2,17 @@
 # 사용법: ./Scripts/generate-appcast.sh <version> <dmg_path>
 # 사전 조건: SPARKLE_TOOLS_PATH 환경변수로 Sparkle bin 디렉토리 경로 지정
 #   예) export SPARKLE_TOOLS_PATH=/tmp/sparkle-tools/bin
-# 릴리즈마다 docs/appcast.xml을 갱신하고 커밋한다.
+# 어느 디렉토리에서 실행해도 동작한다.
 
 set -e
+
+SCRIPT_DIR=$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)
+REPO_ROOT=$(dirname "$SCRIPT_DIR")
 
 VERSION="$1"
 DMG_PATH="$2"
 TOOLS="${SPARKLE_TOOLS_PATH:-/tmp/sparkle-tools/bin}"
-APPCAST_PATH="docs/appcast.xml"
+APPCAST_PATH="$REPO_ROOT/docs/appcast.xml"
 DOWNLOAD_URL="https://github.com/Ryan-Dia/pocket-notes/releases/download/v${VERSION}/PocketNotes-${VERSION}.dmg"
 
 if [ -z "$VERSION" ] || [ -z "$DMG_PATH" ]; then
@@ -30,9 +33,20 @@ if [ ! -x "$TOOLS/sign_update" ]; then
 fi
 
 echo "→ DMG 서명 중..."
-SIGN_OUTPUT=$("$TOOLS/sign_update" "$DMG_PATH")
+SIGN_OUTPUT=$("$TOOLS/sign_update" "$DMG_PATH") || {
+    echo "Error: sign_update failed"
+    exit 1
+}
+
 SIGNATURE=$(echo "$SIGN_OUTPUT" | grep -o 'sparkle:edSignature="[^"]*"' | cut -d'"' -f2)
 LENGTH=$(echo "$SIGN_OUTPUT" | grep -o 'length="[^"]*"' | cut -d'"' -f2)
+
+if [ -z "$SIGNATURE" ] || [ -z "$LENGTH" ]; then
+    echo "Error: Failed to parse sign_update output:"
+    echo "$SIGN_OUTPUT"
+    exit 1
+fi
+
 PUB_DATE=$(date -u "+%a, %d %b %Y %H:%M:%S +0000")
 
 cat > "$APPCAST_PATH" << EOF
@@ -55,9 +69,9 @@ cat > "$APPCAST_PATH" << EOF
 </rss>
 EOF
 
-xmllint --noout "$APPCAST_PATH"
+xmllint --noout "$APPCAST_PATH" || { echo "Error: Invalid XML generated"; exit 1; }
 echo "✓ $APPCAST_PATH 갱신 완료 (v${VERSION})"
 echo ""
 echo "다음 단계:"
-echo "  git add $APPCAST_PATH && git commit -m 'chore: appcast.xml 갱신 (v${VERSION})'"
+echo "  git add docs/appcast.xml && git commit -m 'chore: appcast.xml 갱신 (v${VERSION})'"
 echo "  GitHub Releases에 $DMG_PATH 업로드"
