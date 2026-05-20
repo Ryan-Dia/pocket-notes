@@ -61,30 +61,6 @@ PocketNotes는 메뉴바 아이콘을 클릭하면 화면 측면에서 슬라이
 > **해결 방법:** `PocketNotes.app`을 **우클릭(또는 Control+클릭) → 열기** 를 선택하면 한 번만 확인 후 정상 실행됩니다.  
 > 이후 실행부터는 경고가 나타나지 않습니다.
 
----
-
-## 빌드 및 실행
-
-```bash
-# 저장소 클론
-git clone https://github.com/Ryan-Dia/pocket-notes.git
-cd pocket-notes
-
-# XcodeGen으로 프로젝트 생성 (최초 1회)
-xcodegen generate
-
-# Xcode로 열기
-open PocketNotes.xcodeproj
-```
-
-또는 커맨드라인 빌드:
-
-```bash
-xcodebuild -project PocketNotes.xcodeproj \
-           -scheme PocketNotes \
-           -configuration Release \
-           build
-```
 
 ---
 
