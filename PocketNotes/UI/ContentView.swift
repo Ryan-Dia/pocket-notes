@@ -19,6 +19,11 @@ struct ContentView: View {
         }
         .frame(maxWidth: .infinity, maxHeight: .infinity)
         .animation(.easeInOut(duration: 0.18), value: navigationStack.count)
+        .onReceive(store.$roots) { _ in
+            // store.reload()은 매번 새 NoteNode 인스턴스를 생성하므로
+            // 스택의 구 인스턴스를 fresh 인스턴스로 교체해야 children이 갱신됨
+            navigationStack = navigationStack.compactMap { store.findFolder(url: $0.url) }
+        }
     }
 
     @ViewBuilder
