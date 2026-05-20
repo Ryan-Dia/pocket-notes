@@ -45,6 +45,8 @@ targets:
         LSUIElement: true
         NSHumanReadableCopyright: "Copyright © 2026 Ryan-Dia. All rights reserved."
         CFBundleIconFile: AppIcon
+        SUFeedURL: "https://raw.githubusercontent.com/Ryan-Dia/pocket-notes/main/docs/appcast.xml"
+        SUPublicEDKey: "+KDAtcTBJecYl93oZAMT1eOY3sbs0MkTtfaldDZLihc="
     entitlements:
       path: PocketNotes/PocketNotes.entitlements
     dependencies:
