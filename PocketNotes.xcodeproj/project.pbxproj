@@ -21,6 +21,7 @@
 		C389533195135CF450B1E858 /* SettingsView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 84A865B606225E99C18C5EFA /* SettingsView.swift */; };
 		C587FDBB069FF5D320126975 /* EditorView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 95FAF694362A972A6370D32B /* EditorView.swift */; };
 		CCED5D3DEE3C084ACD4D57ED /* FolderWatcher.swift in Sources */ = {isa = PBXBuildFile; fileRef = DCB1D56572D7023AE51D5C5F /* FolderWatcher.swift */; };
+		D57166278FC09187DD129BA5 /* LocalHotkeyMonitor.swift in Sources */ = {isa = PBXBuildFile; fileRef = 83FC1292A3A4C2CD23E1C899 /* LocalHotkeyMonitor.swift */; };
 		F4C63AB3A52DBCCEF3C7FA74 /* HotkeyRecorderView.swift in Sources */ = {isa = PBXBuildFile; fileRef = BEB6B24E6636518D198DCD0B /* HotkeyRecorderView.swift */; };
 /* End PBXBuildFile section */
 
@@ -32,6 +33,7 @@
 		7CFF7F3EB71A6770626A00CF /* FolderContentsView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FolderContentsView.swift; sourceTree = "<group>"; };
 		7FFF592FF9D661DD893DE3A9 /* PocketNotes.entitlements */ = {isa = PBXFileReference; lastKnownFileType = text.plist.entitlements; path = PocketNotes.entitlements; sourceTree = "<group>"; };
 		818613C21C76992EED9A62E8 /* SidebarView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SidebarView.swift; sourceTree = "<group>"; };
+		83FC1292A3A4C2CD23E1C899 /* LocalHotkeyMonitor.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LocalHotkeyMonitor.swift; sourceTree = "<group>"; };
 		84A865B606225E99C18C5EFA /* SettingsView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SettingsView.swift; sourceTree = "<group>"; };
 		90A6D02B02A4A8CCDA76861F /* SlidingPanel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SlidingPanel.swift; sourceTree = "<group>"; };
 		9167DD3F355CDAE580B340E6 /* ContentView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ContentView.swift; sourceTree = "<group>"; };
@@ -118,6 +120,7 @@
 			isa = PBXGroup;
 			children = (
 				1C70ADEEEC6866BBDAA2AFF9 /* GlobalHotkey.swift */,
+				83FC1292A3A4C2CD23E1C899 /* LocalHotkeyMonitor.swift */,
 			);
 			path = Hotkey;
 			sourceTree = "<group>";
@@ -198,6 +201,7 @@
 				CCED5D3DEE3C084ACD4D57ED /* FolderWatcher.swift in Sources */,
 				02FEB9B4009D14C219615351 /* GlobalHotkey.swift in Sources */,
 				F4C63AB3A52DBCCEF3C7FA74 /* HotkeyRecorderView.swift in Sources */,
+				D57166278FC09187DD129BA5 /* LocalHotkeyMonitor.swift in Sources */,
 				0C83DF68A9D29D2DCF73B257 /* MarkdownPreview.swift in Sources */,
 				11C97685686FC00D8CD5468B /* NoteNode.swift in Sources */,
 				2FAAA07A6B8B787D451A12BE /* NotesStore.swift in Sources */,
