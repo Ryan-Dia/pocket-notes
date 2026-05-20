@@ -44,6 +44,25 @@ PocketNotes는 메뉴바 아이콘을 클릭하면 화면 측면에서 슬라이
 
 ---
 
+## 설치 (빌드 없이)
+
+[Releases 페이지](https://github.com/Ryan-Dia/pocket-notes/releases)에서 최신 버전의 `PocketNotes-vX.X.X.zip`을 다운로드합니다.
+
+```
+1. zip 압축 해제
+2. PocketNotes.app → /Applications 폴더로 이동
+3. 실행
+```
+
+> **⚠️ "확인할 수 없는 개발자" 경고가 뜨는 경우**
+>
+> Apple 공증(Notarization)이 적용되지 않아 macOS Gatekeeper가 경고를 표시합니다.
+>
+> **해결 방법:** `PocketNotes.app`을 **우클릭(또는 Control+클릭) → 열기** 를 선택하면 한 번만 확인 후 정상 실행됩니다.  
+> 이후 실행부터는 경고가 나타나지 않습니다.
+
+---
+
 ## 빌드 및 실행
 
 ```bash
