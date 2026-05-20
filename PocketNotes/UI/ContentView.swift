@@ -24,6 +24,17 @@ struct ContentView: View {
             // 스택의 구 인스턴스를 fresh 인스턴스로 교체해야 children이 갱신됨
             navigationStack = navigationStack.compactMap { store.findFolder(url: $0.url) }
         }
+        .onReceive(NotificationCenter.default.publisher(for: .pnCreateNote)) { _ in
+            guard let folder = navigationStack.last else { return }
+            store.createNote(in: folder)
+        }
+        .onReceive(NotificationCenter.default.publisher(for: .pnCreateFolder)) { _ in
+            if navigationStack.isEmpty {
+                store.createFolder(in: nil)
+            } else if let folder = navigationStack.last, store.depth(of: folder) < 2 {
+                store.createFolder(in: folder)
+            }
+        }
     }
 
     @ViewBuilder
