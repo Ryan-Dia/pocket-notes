@@ -8,6 +8,10 @@ struct SettingsView: View {
     @AppStorage("hideOnLostFocus") private var hideOnLostFocus = false
     @AppStorage("hotkeyKeyCode") private var hotkeyKeyCode = 0
     @AppStorage("hotkeyModifiers") private var hotkeyModifiers = 0
+    @AppStorage("createNoteKeyCode")     private var createNoteKeyCode     = 0
+    @AppStorage("createNoteModifiers")   private var createNoteModifiers   = 0
+    @AppStorage("createFolderKeyCode")   private var createFolderKeyCode   = 0
+    @AppStorage("createFolderModifiers") private var createFolderModifiers = 0
 
     var body: some View {
         Form {
@@ -34,7 +38,31 @@ struct SettingsView: View {
                     )
                     .frame(width: 160, height: 28)
                 }
-                Text("클릭 후 원하는 키 조합을 누르세요. Delete로 기본값(⌥Space) 복원.")
+                LabeledContent("노트 생성") {
+                    HotkeyRecorderView(
+                        keyCode: UserDefaults.standard.object(forKey: "createNoteKeyCode") == nil ? kVK_ANSI_N : createNoteKeyCode,
+                        modifiers: UserDefaults.standard.object(forKey: "createNoteModifiers") == nil ? cmdKey : createNoteModifiers,
+                        onChange: { code, mods in
+                            UserDefaults.standard.set(code, forKey: "createNoteKeyCode")
+                            UserDefaults.standard.set(mods, forKey: "createNoteModifiers")
+                            NotificationCenter.default.post(name: .init("pn.localHotkeyDidChange"), object: nil)
+                        }
+                    )
+                    .frame(width: 160, height: 28)
+                }
+                LabeledContent("폴더 생성") {
+                    HotkeyRecorderView(
+                        keyCode: UserDefaults.standard.object(forKey: "createFolderKeyCode") == nil ? kVK_ANSI_F : createFolderKeyCode,
+                        modifiers: UserDefaults.standard.object(forKey: "createFolderModifiers") == nil ? cmdKey : createFolderModifiers,
+                        onChange: { code, mods in
+                            UserDefaults.standard.set(code, forKey: "createFolderKeyCode")
+                            UserDefaults.standard.set(mods, forKey: "createFolderModifiers")
+                            NotificationCenter.default.post(name: .init("pn.localHotkeyDidChange"), object: nil)
+                        }
+                    )
+                    .frame(width: 160, height: 28)
+                }
+                Text("패널이 열린 상태에서만 동작합니다. 클릭 후 키 조합 입력, Delete로 기본값 복원.")
                     .font(.caption)
                     .foregroundStyle(.tertiary)
             }
@@ -53,7 +81,7 @@ struct SettingsView: View {
             }
         }
         .formStyle(.grouped)
-        .frame(width: 400, height: 380)
+        .frame(width: 400, height: 460)
         .navigationTitle("설정")
     }
 
