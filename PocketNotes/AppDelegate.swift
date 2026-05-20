@@ -1,6 +1,7 @@
 import AppKit
 import Carbon
 import SwiftUI
+import Sparkle
 
 final class AppDelegate: NSObject, NSApplicationDelegate {
     let notesStore = NotesStore()
@@ -10,9 +11,11 @@ final class AppDelegate: NSObject, NSApplicationDelegate {
     private var contextMenu: NSMenu?
     private var settingsWindow: NSWindow?
     private var localMonitor: LocalHotkeyMonitor?
+    private var updaterController: SPUStandardUpdaterController!
 
     func applicationDidFinishLaunching(_ notification: Notification) {
         NSApp.setActivationPolicy(.accessory)
+        updaterController = SPUStandardUpdaterController(startingUpdater: true, updaterDelegate: nil, userDriverDelegate: nil)
         setupMenuBar()
         setupPanel()
         setupHotkey()
@@ -36,6 +39,11 @@ final class AppDelegate: NSObject, NSApplicationDelegate {
         menu.addItem(NSMenuItem(title: "PocketNotes 열기", action: #selector(showPanel), keyEquivalent: ""))
         menu.addItem(.separator())
         menu.addItem(NSMenuItem(title: "설정...", action: #selector(openSettings), keyEquivalent: ","))
+
+        let updateItem = NSMenuItem(title: "업데이트 확인...", action: #selector(checkForUpdates), keyEquivalent: "")
+        updateItem.target = self
+        menu.addItem(updateItem)
+
         menu.addItem(.separator())
         menu.addItem(NSMenuItem(title: "종료", action: #selector(NSApplication.terminate(_:)), keyEquivalent: "q"))
         contextMenu = menu
@@ -111,9 +119,15 @@ final class AppDelegate: NSObject, NSApplicationDelegate {
         panelController?.show()
     }
 
+    @objc private func checkForUpdates() {
+        updaterController.checkForUpdates(nil)
+    }
+
     @objc private func openSettings() {
         if settingsWindow == nil {
-            let view = SettingsView().environmentObject(notesStore)
+            let view = SettingsView(onCheckForUpdates: { [weak self] in
+                self?.updaterController.checkForUpdates(nil)
+            }).environmentObject(notesStore)
             let hosting = NSHostingController(rootView: view)
             let window = NSWindow(contentViewController: hosting)
             window.title = "설정"

@@ -2,6 +2,8 @@ import SwiftUI
 import Carbon
 
 struct SettingsView: View {
+    var onCheckForUpdates: () -> Void = {}
+
     @EnvironmentObject var store: NotesStore
 
     @AppStorage("panelEdge") private var panelEdge = "right"
@@ -79,9 +81,17 @@ struct SettingsView: View {
                     NSWorkspace.shared.open(store.rootURL)
                 }
             }
+
+            Section("업데이트") {
+                LabeledContent("현재 버전") {
+                    Text(Bundle.main.infoDictionary?["CFBundleShortVersionString"] as? String ?? "")
+                        .foregroundStyle(.secondary)
+                }
+                Button("업데이트 확인") { onCheckForUpdates() }
+            }
         }
         .formStyle(.grouped)
-        .frame(width: 400, height: 460)
+        .frame(width: 400, height: 520)
         .navigationTitle("설정")
     }
 
