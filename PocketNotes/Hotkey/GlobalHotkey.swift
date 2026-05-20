@@ -15,21 +15,23 @@ final class GlobalHotkey {
         self.hotkeyID = Self.nextID
         Self.nextID += 1
 
-        register()
+        let savedKey = UserDefaults.standard.integer(forKey: "hotkeyKeyCode")
+        let savedMod = UserDefaults.standard.integer(forKey: "hotkeyModifiers")
+        let keyCode = savedKey == 0 ? kVK_Space : savedKey
+        let modifiers = savedMod == 0 ? optionKey : savedMod
+        register(keyCode: keyCode, modifiers: modifiers)
     }
 
     deinit {
         unregister()
     }
 
-    private func register() {
-        let savedKey = UserDefaults.standard.integer(forKey: "hotkeyKeyCode")
-        let savedMod = UserDefaults.standard.integer(forKey: "hotkeyModifiers")
+    func update(keyCode: Int, modifiers: Int) {
+        unregister()
+        register(keyCode: keyCode, modifiers: modifiers)
+    }
 
-        // 기본값: Option(⌥) + Space
-        let keyCode = savedKey == 0 ? kVK_Space : savedKey
-        let modifiers = savedMod == 0 ? optionKey : savedMod
-
+    private func register(keyCode: Int, modifiers: Int) {
         var eventType = EventTypeSpec(eventClass: OSType(kEventClassKeyboard), eventKind: UInt32(kEventHotKeyPressed))
         let id = EventHotKeyID(signature: OSType(0x504E_4F54), id: hotkeyID) // 'PNOT'
 
@@ -60,8 +62,8 @@ final class GlobalHotkey {
     }
 
     private func unregister() {
-        if let ref = hotKeyRef { UnregisterEventHotKey(ref) }
-        if let handler = eventHandler { RemoveEventHandler(handler) }
+        if let ref = hotKeyRef { UnregisterEventHotKey(ref); hotKeyRef = nil }
+        if let handler = eventHandler { RemoveEventHandler(handler); eventHandler = nil }
         Self.activeHandlers.removeValue(forKey: hotkeyID)
     }
 }
