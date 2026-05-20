@@ -9,12 +9,14 @@ final class AppDelegate: NSObject, NSApplicationDelegate {
     private var hotkey: GlobalHotkey?
     private var contextMenu: NSMenu?
     private var settingsWindow: NSWindow?
+    private var localMonitor: LocalHotkeyMonitor?
 
     func applicationDidFinishLaunching(_ notification: Notification) {
         NSApp.setActivationPolicy(.accessory)
         setupMenuBar()
         setupPanel()
         setupHotkey()
+        setupLocalHotkeys()
     }
 
     private func setupMenuBar() {
@@ -64,6 +66,28 @@ final class AppDelegate: NSObject, NSApplicationDelegate {
             }
             self?.hotkey?.update(keyCode: keyCode, modifiers: modifiers)
         }
+    }
+
+    private func setupLocalHotkeys() {
+        localMonitor = LocalHotkeyMonitor()
+        applyLocalHotkeySettings()
+        NotificationCenter.default.addObserver(
+            forName: Notification.Name("pn.localHotkeyDidChange"),
+            object: nil,
+            queue: .main
+        ) { [weak self] _ in self?.applyLocalHotkeySettings() }
+    }
+
+    private func applyLocalHotkeySettings() {
+        let ud = UserDefaults.standard
+        let noteKey   = ud.object(forKey: "createNoteKeyCode")     == nil ? kVK_ANSI_N : ud.integer(forKey: "createNoteKeyCode")
+        let noteMod   = ud.object(forKey: "createNoteModifiers")   == nil ? cmdKey     : ud.integer(forKey: "createNoteModifiers")
+        let folderKey = ud.object(forKey: "createFolderKeyCode")   == nil ? kVK_ANSI_F : ud.integer(forKey: "createFolderKeyCode")
+        let folderMod = ud.object(forKey: "createFolderModifiers") == nil ? cmdKey     : ud.integer(forKey: "createFolderModifiers")
+        localMonitor?.update(
+            createNote:   (noteKey,   noteMod),
+            createFolder: (folderKey, folderMod)
+        )
     }
 
     @objc private func handleStatusItemClick() {
