@@ -16,6 +16,7 @@
 		8F286E6C807DBE806DE921A5 /* SidebarView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 818613C21C76992EED9A62E8 /* SidebarView.swift */; };
 		91FDD525F362F1F721C8B711 /* PocketNotesApp.swift in Sources */ = {isa = PBXBuildFile; fileRef = DDFBB40DBF67008DD8D91C8B /* PocketNotesApp.swift */; };
 		9464B83426D82B33B10E94B0 /* SlidingPanel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 90A6D02B02A4A8CCDA76861F /* SlidingPanel.swift */; };
+		9479CE43E686E04F4AFA0665 /* Sparkle in Frameworks */ = {isa = PBXBuildFile; productRef = EFFF4A107804D8D9CAE12AC3 /* Sparkle */; };
 		988EA10B51C40C8AFD74FE85 /* PanelController.swift in Sources */ = {isa = PBXBuildFile; fileRef = C7C69F16DF01DB38768E671C /* PanelController.swift */; };
 		B4033D52606DA001345ADE7D /* ContentView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9167DD3F355CDAE580B340E6 /* ContentView.swift */; };
 		C389533195135CF450B1E858 /* SettingsView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 84A865B606225E99C18C5EFA /* SettingsView.swift */; };
@@ -45,6 +46,17 @@
 		DCB1D56572D7023AE51D5C5F /* FolderWatcher.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FolderWatcher.swift; sourceTree = "<group>"; };
 		DDFBB40DBF67008DD8D91C8B /* PocketNotesApp.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PocketNotesApp.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
+
+/* Begin PBXFrameworksBuildPhase section */
+		F155B8C1A41456DCBC4CE299 /* Frameworks */ = {
+			isa = PBXFrameworksBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				9479CE43E686E04F4AFA0665 /* Sparkle in Frameworks */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXFrameworksBuildPhase section */
 
 /* Begin PBXGroup section */
 		12B9955B89BE08681898D799 /* Resources */ = {
@@ -143,6 +155,7 @@
 			buildConfigurationList = F432AA42A60721216E71F43D /* Build configuration list for PBXNativeTarget "PocketNotes" */;
 			buildPhases = (
 				2D0B856A1A24FD71B8981C63 /* Sources */,
+				F155B8C1A41456DCBC4CE299 /* Frameworks */,
 			);
 			buildRules = (
 			);
@@ -150,6 +163,7 @@
 			);
 			name = PocketNotes;
 			packageProductDependencies = (
+				EFFF4A107804D8D9CAE12AC3 /* Sparkle */,
 			);
 			productName = PocketNotes;
 			productReference = 9DBCB2EB02C786FFCE884708 /* PocketNotes.app */;
@@ -179,6 +193,9 @@
 			);
 			mainGroup = 132B6DD81111DEE073294570;
 			minimizedProjectReferenceProxies = 1;
+			packageReferences = (
+				7E5A9AA7BADF053F33D15147 /* XCRemoteSwiftPackageReference "Sparkle" */,
+			);
 			preferredProjectObjectVersion = 77;
 			productRefGroup = 452B94D7AFCD53862144D403 /* Products */;
 			projectDirPath = "";
@@ -401,6 +418,25 @@
 			defaultConfigurationName = Debug;
 		};
 /* End XCConfigurationList section */
+
+/* Begin XCRemoteSwiftPackageReference section */
+		7E5A9AA7BADF053F33D15147 /* XCRemoteSwiftPackageReference "Sparkle" */ = {
+			isa = XCRemoteSwiftPackageReference;
+			repositoryURL = "https://github.com/sparkle-project/Sparkle";
+			requirement = {
+				kind = upToNextMajorVersion;
+				minimumVersion = 2.7.0;
+			};
+		};
+/* End XCRemoteSwiftPackageReference section */
+
+/* Begin XCSwiftPackageProductDependency section */
+		EFFF4A107804D8D9CAE12AC3 /* Sparkle */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = 7E5A9AA7BADF053F33D15147 /* XCRemoteSwiftPackageReference "Sparkle" */;
+			productName = Sparkle;
+		};
+/* End XCSwiftPackageProductDependency section */
 	};
 	rootObject = FF19CA8171414ADDEB012067 /* Project object */;
 }
