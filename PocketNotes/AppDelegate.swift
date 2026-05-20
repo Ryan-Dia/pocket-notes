@@ -1,4 +1,5 @@
 import AppKit
+import Carbon
 import SwiftUI
 
 final class AppDelegate: NSObject, NSApplicationDelegate {
@@ -46,6 +47,18 @@ final class AppDelegate: NSObject, NSApplicationDelegate {
     private func setupHotkey() {
         hotkey = GlobalHotkey { [weak self] in
             self?.togglePanel()
+        }
+        NotificationCenter.default.addObserver(
+            forName: Notification.Name("pn.hotkeyDidChange"),
+            object: nil,
+            queue: .main
+        ) { [weak self] _ in
+            let keyCode = UserDefaults.standard.integer(forKey: "hotkeyKeyCode")
+            let modifiers = UserDefaults.standard.integer(forKey: "hotkeyModifiers")
+            self?.hotkey?.update(
+                keyCode: keyCode == 0 ? kVK_Space : keyCode,
+                modifiers: modifiers == 0 ? optionKey : modifiers
+            )
         }
     }
 
