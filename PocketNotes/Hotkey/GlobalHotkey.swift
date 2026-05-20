@@ -15,10 +15,15 @@ final class GlobalHotkey {
         self.hotkeyID = Self.nextID
         Self.nextID += 1
 
-        let savedKey = UserDefaults.standard.integer(forKey: "hotkeyKeyCode")
-        let savedMod = UserDefaults.standard.integer(forKey: "hotkeyModifiers")
-        let keyCode = savedKey == 0 ? kVK_Space : savedKey
-        let modifiers = savedMod == 0 ? optionKey : savedMod
+        let keyCode: Int
+        let modifiers: Int
+        if UserDefaults.standard.object(forKey: "hotkeyKeyCode") == nil {
+            keyCode = kVK_Space
+            modifiers = optionKey
+        } else {
+            keyCode = UserDefaults.standard.integer(forKey: "hotkeyKeyCode")
+            modifiers = UserDefaults.standard.integer(forKey: "hotkeyModifiers")
+        }
         register(keyCode: keyCode, modifiers: modifiers)
     }
 

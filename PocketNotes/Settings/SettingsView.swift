@@ -24,11 +24,11 @@ struct SettingsView: View {
             Section("단축키") {
                 LabeledContent("패널 토글") {
                     HotkeyRecorderView(
-                        keyCode: hotkeyKeyCode == 0 ? kVK_Space : hotkeyKeyCode,
-                        modifiers: hotkeyModifiers == 0 ? optionKey : hotkeyModifiers,
+                        keyCode: UserDefaults.standard.object(forKey: "hotkeyKeyCode") == nil ? kVK_Space : hotkeyKeyCode,
+                        modifiers: UserDefaults.standard.object(forKey: "hotkeyModifiers") == nil ? optionKey : hotkeyModifiers,
                         onChange: { code, mods in
-                            hotkeyKeyCode = code
-                            hotkeyModifiers = mods
+                            UserDefaults.standard.set(code, forKey: "hotkeyKeyCode")
+                            UserDefaults.standard.set(mods, forKey: "hotkeyModifiers")
                             NotificationCenter.default.post(name: .init("pn.hotkeyDidChange"), object: nil)
                         }
                     )
@@ -53,7 +53,7 @@ struct SettingsView: View {
             }
         }
         .formStyle(.grouped)
-        .frame(width: 400, height: 340)
+        .frame(width: 400, height: 380)
         .navigationTitle("설정")
     }
 

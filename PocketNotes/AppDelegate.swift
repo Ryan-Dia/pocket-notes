@@ -8,6 +8,7 @@ final class AppDelegate: NSObject, NSApplicationDelegate {
     private var statusItem: NSStatusItem?
     private var hotkey: GlobalHotkey?
     private var contextMenu: NSMenu?
+    private var settingsWindow: NSWindow?
 
     func applicationDidFinishLaunching(_ notification: Notification) {
         NSApp.setActivationPolicy(.accessory)
@@ -53,12 +54,15 @@ final class AppDelegate: NSObject, NSApplicationDelegate {
             object: nil,
             queue: .main
         ) { [weak self] _ in
-            let keyCode = UserDefaults.standard.integer(forKey: "hotkeyKeyCode")
-            let modifiers = UserDefaults.standard.integer(forKey: "hotkeyModifiers")
-            self?.hotkey?.update(
-                keyCode: keyCode == 0 ? kVK_Space : keyCode,
-                modifiers: modifiers == 0 ? optionKey : modifiers
-            )
+            let keyCode: Int
+            let modifiers: Int
+            if UserDefaults.standard.object(forKey: "hotkeyKeyCode") == nil {
+                keyCode = kVK_Space; modifiers = optionKey
+            } else {
+                keyCode = UserDefaults.standard.integer(forKey: "hotkeyKeyCode")
+                modifiers = UserDefaults.standard.integer(forKey: "hotkeyModifiers")
+            }
+            self?.hotkey?.update(keyCode: keyCode, modifiers: modifiers)
         }
     }
 
@@ -84,7 +88,17 @@ final class AppDelegate: NSObject, NSApplicationDelegate {
     }
 
     @objc private func openSettings() {
-        NSApp.sendAction(Selector(("showSettingsWindow:")), to: nil, from: nil)
+        if settingsWindow == nil {
+            let view = SettingsView().environmentObject(notesStore)
+            let hosting = NSHostingController(rootView: view)
+            let window = NSWindow(contentViewController: hosting)
+            window.title = "설정"
+            window.styleMask = [.titled, .closable]
+            window.isReleasedWhenClosed = false
+            window.center()
+            settingsWindow = window
+        }
+        settingsWindow?.makeKeyAndOrderFront(nil)
         NSApp.activate(ignoringOtherApps: true)
     }
 }
