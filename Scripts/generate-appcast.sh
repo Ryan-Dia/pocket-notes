@@ -51,7 +51,7 @@ if [ -z "$SIGNATURE" ] || [ -z "$LENGTH" ]; then
     exit 1
 fi
 
-PUB_DATE=$(date -u "+%a, %d %b %Y %H:%M:%S +0000")
+PUB_DATE=$(LANG=C LC_ALL=C date -u "+%a, %d %b %Y %H:%M:%S +0000")
 
 cat > "$APPCAST_PATH" << EOF
 <?xml version="1.0" encoding="utf-8"?>
