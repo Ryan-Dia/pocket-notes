@@ -1,10 +1,13 @@
 import SwiftUI
+import Carbon
 
 struct SettingsView: View {
     @EnvironmentObject var store: NotesStore
 
     @AppStorage("panelEdge") private var panelEdge = "right"
     @AppStorage("hideOnLostFocus") private var hideOnLostFocus = false
+    @AppStorage("hotkeyKeyCode") private var hotkeyKeyCode = 0
+    @AppStorage("hotkeyModifiers") private var hotkeyModifiers = 0
 
     var body: some View {
         Form {
@@ -20,10 +23,18 @@ struct SettingsView: View {
 
             Section("단축키") {
                 LabeledContent("패널 토글") {
-                    Text("⌥Space")
-                        .foregroundStyle(.secondary)
+                    HotkeyRecorderView(
+                        keyCode: hotkeyKeyCode == 0 ? kVK_Space : hotkeyKeyCode,
+                        modifiers: hotkeyModifiers == 0 ? optionKey : hotkeyModifiers,
+                        onChange: { code, mods in
+                            hotkeyKeyCode = code
+                            hotkeyModifiers = mods
+                            NotificationCenter.default.post(name: .init("pn.hotkeyDidChange"), object: nil)
+                        }
+                    )
+                    .frame(width: 160, height: 28)
                 }
-                Text("v2에서 커스텀 단축키 지원 예정")
+                Text("클릭 후 원하는 키 조합을 누르세요. Delete로 기본값(⌥Space) 복원.")
                     .font(.caption)
                     .foregroundStyle(.tertiary)
             }
