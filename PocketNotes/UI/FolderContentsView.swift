@@ -10,8 +10,10 @@ struct FolderContentsView: View {
     @State private var renameText = ""
 
     private var depth: Int { store.depth(of: folder) }
-    private var subfolders: [NoteNode] { folder.children?.filter { $0.isFolder } ?? [] }
-    private var notes: [NoteNode] { folder.children?.filter { !$0.isFolder } ?? [] }
+    // store.roots(@Published)를 통해 접근 → store 변경 시 자동 재렌더
+    private var currentNode: NoteNode? { store.findFolder(url: folder.url) }
+    private var subfolders: [NoteNode] { currentNode?.children?.filter { $0.isFolder } ?? [] }
+    private var notes: [NoteNode] { currentNode?.children?.filter { !$0.isFolder } ?? [] }
 
     var body: some View {
         VStack(spacing: 0) {
