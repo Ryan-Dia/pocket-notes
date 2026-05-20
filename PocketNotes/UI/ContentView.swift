@@ -54,6 +54,7 @@ struct ContentView: View {
     }
 
     private func handleBack() {
+        guard !navigationStack.isEmpty else { return }
         withAnimation(.easeInOut(duration: 0.18)) {
             navigationStack.removeLast()
         }

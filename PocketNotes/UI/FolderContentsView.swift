@@ -28,9 +28,6 @@ struct FolderContentsView: View {
             }
         }
         .background(PNTheme.bg)
-        .onReceive(store.$roots) { _ in
-            if store.findFolder(url: folder.url) == nil { onBack() }
-        }
     }
 
     // MARK: - Header
