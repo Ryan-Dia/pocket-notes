@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="utf-8"?>
+<rss version="2.0" xmlns:sparkle="http://www.andymatuschak.org/xml-namespaces/sparkle">
+  <channel>
+    <title>PocketNotes</title>
+    <item>
+      <title>0.1.0</title>
+      <pubDate>Wed, 21 May 2026 00:00:00 +0000</pubDate>
+      <sparkle:version>1</sparkle:version>
+      <sparkle:shortVersionString>0.1.0</sparkle:shortVersionString>
+      <enclosure
+        url="https://github.com/Ryan-Dia/pocket-notes/releases/download/v0.1.0/PocketNotes-0.1.0.dmg"
+        sparkle:edSignature="4zaQaB7gJFp4EsHbNh0He9wdmmwXd/NpJ8w0Q/+mbiOwJ49oqZNPNva4Cw5iNAfy3OzFnq4IU0E5XOTvLmUeDA=="
+        length="179153"
+        type="application/octet-stream"/>
+    </item>
+  </channel>
+</rss>
