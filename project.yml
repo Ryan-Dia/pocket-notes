@@ -12,8 +12,8 @@ settings:
     MACOSX_DEPLOYMENT_TARGET: "14.0"
     PRODUCT_BUNDLE_IDENTIFIER: com.ryandia.PocketNotes
     PRODUCT_NAME: PocketNotes
-    MARKETING_VERSION: "0.1.0"
-    CURRENT_PROJECT_VERSION: "1"
+    MARKETING_VERSION: "0.2.0"
+    CURRENT_PROJECT_VERSION: "2"
     CODE_SIGN_STYLE: Automatic
     CODE_SIGN_IDENTITY: "-"
     DEVELOPMENT_TEAM: ""
@@ -38,8 +38,8 @@ targets:
         CFBundleName: PocketNotes
         CFBundleDisplayName: PocketNotes
         CFBundleIdentifier: com.ryandia.PocketNotes
-        CFBundleVersion: "1"
-        CFBundleShortVersionString: "0.1.0"
+        CFBundleVersion: "2"
+        CFBundleShortVersionString: "0.2.0"
         NSPrincipalClass: NSApplication
         LSMinimumSystemVersion: "14.0"
         LSUIElement: true

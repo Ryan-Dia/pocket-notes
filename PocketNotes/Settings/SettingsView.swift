@@ -5,6 +5,7 @@ struct SettingsView: View {
     var onCheckForUpdates: () -> Void = {}
 
     @EnvironmentObject var store: NotesStore
+    @EnvironmentObject var theme: ThemeStore
 
     @AppStorage("panelEdge") private var panelEdge = "right"
     @AppStorage("hideOnLostFocus") private var hideOnLostFocus = false
@@ -82,6 +83,29 @@ struct SettingsView: View {
                 }
             }
 
+            Section("테마") {
+                HStack(spacing: 10) {
+                    ForEach(ThemeStore.presets) { preset in
+                        ThemePresetSwatch(
+                            preset: preset,
+                            isSelected: theme.selectedPreset == preset.id,
+                            onSelect: { theme.applyPreset(preset) }
+                        )
+                    }
+                    ThemeCustomSwatch(isSelected: theme.selectedPreset == "custom") {
+                        theme.selectedPreset = "custom"
+                    }
+                }
+                .padding(.vertical, 4)
+
+                if theme.selectedPreset == "custom" {
+                    ThemeColorRow(label: "배경", hex: $theme.bgHex)
+                    ThemeColorRow(label: "카드", hex: $theme.cardHex)
+                    ThemeColorRow(label: "강조", hex: $theme.accentHex)
+                    ThemeColorRow(label: "제목", hex: $theme.headingHex)
+                }
+            }
+
             Section("업데이트") {
                 LabeledContent("현재 버전") {
                     Text(Bundle.main.infoDictionary?["CFBundleShortVersionString"] as? String ?? "")
@@ -91,7 +115,7 @@ struct SettingsView: View {
             }
         }
         .formStyle(.grouped)
-        .frame(width: 400, height: 520)
+        .frame(width: 400, height: 560)
         .navigationTitle("설정")
     }
 
@@ -103,6 +127,110 @@ struct SettingsView: View {
         panel.prompt = "선택"
         if panel.runModal() == .OK, let url = panel.url {
             store.rootURL = url
+        }
+    }
+}
+
+// MARK: - Theme Helper Views
+
+private struct ThemePresetSwatch: View {
+    let preset: PresetTheme
+    let isSelected: Bool
+    let onSelect: () -> Void
+
+    var body: some View {
+        Button(action: onSelect) {
+            VStack(spacing: 4) {
+                RoundedRectangle(cornerRadius: 8)
+                    .fill(LinearGradient(
+                        stops: [
+                            .init(color: Color(hex: preset.bgHex)     ?? .white, location: 0.5),
+                            .init(color: Color(hex: preset.accentHex) ?? .gray,  location: 0.5),
+                        ],
+                        startPoint: .topLeading,
+                        endPoint: .bottomTrailing
+                    ))
+                    .frame(width: 38, height: 38)
+                    .overlay(
+                        RoundedRectangle(cornerRadius: 8)
+                            .strokeBorder(
+                                isSelected ? (Color(hex: preset.accentHex) ?? .blue) : Color.gray.opacity(0.3),
+                                lineWidth: isSelected ? 2 : 1
+                            )
+                    )
+                Text(preset.name)
+                    .font(.system(size: 10))
+                    .foregroundStyle(isSelected ? .primary : .secondary)
+            }
+        }
+        .buttonStyle(.plain)
+    }
+}
+
+private struct ThemeCustomSwatch: View {
+    let isSelected: Bool
+    let onSelect: () -> Void
+
+    var body: some View {
+        Button(action: onSelect) {
+            VStack(spacing: 4) {
+                RoundedRectangle(cornerRadius: 8)
+                    .fill(Color.white)
+                    .frame(width: 38, height: 38)
+                    .overlay(
+                        RoundedRectangle(cornerRadius: 8)
+                            .strokeBorder(
+                                isSelected ? Color.blue : Color.gray.opacity(0.5),
+                                style: StrokeStyle(lineWidth: isSelected ? 2 : 1.5, dash: [4])
+                            )
+                    )
+                    .overlay(
+                        Image(systemName: "pencil")
+                            .font(.system(size: 14))
+                            .foregroundStyle(isSelected ? .blue : .secondary)
+                    )
+                Text("커스텀")
+                    .font(.system(size: 10))
+                    .foregroundStyle(isSelected ? .primary : .secondary)
+            }
+        }
+        .buttonStyle(.plain)
+    }
+}
+
+private struct ThemeColorRow: View {
+    let label: String
+    @Binding var hex: String
+    @State private var fieldText: String = ""
+
+    private var colorBinding: Binding<Color> {
+        Binding(
+            get: { Color(hex: hex) ?? .white },
+            set: { if let h = $0.toHex() { hex = h } }
+        )
+    }
+
+    var body: some View {
+        LabeledContent(label) {
+            HStack(spacing: 8) {
+                ColorPicker("", selection: colorBinding, supportsOpacity: false)
+                    .labelsHidden()
+                TextField("", text: $fieldText)
+                    .font(.system(.body, design: .monospaced))
+                    .frame(width: 80)
+                    .onSubmit { applyFieldText() }
+            }
+        }
+        .onAppear { fieldText = hex }
+        .onChange(of: hex) { _, new in fieldText = new }
+    }
+
+    private func applyFieldText() {
+        let cleaned = fieldText.hasPrefix("#") ? fieldText : "#\(fieldText)"
+        if Color(hex: cleaned) != nil {
+            hex = cleaned.uppercased()
+        } else {
+            fieldText = hex
         }
     }
 }

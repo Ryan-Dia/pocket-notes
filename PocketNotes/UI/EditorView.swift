@@ -3,6 +3,7 @@ import Combine
 
 struct NoteCardView: View {
     @EnvironmentObject var store: NotesStore
+    @EnvironmentObject var theme: ThemeStore
     let note: NoteNode
 
     @State private var text = ""
@@ -21,7 +22,7 @@ struct NoteCardView: View {
     var body: some View {
         HStack(spacing: 0) {
             Rectangle()
-                .fill(isFocused ? PNTheme.accent : PNTheme.accent.opacity(0.35))
+                .fill(isFocused ? theme.accent : theme.accent.opacity(0.35))
                 .frame(width: 3)
                 .animation(.easeInOut(duration: 0.15), value: isFocused)
 
@@ -73,7 +74,7 @@ struct NoteCardView: View {
                 .padding(.vertical, 8)
             }
         }
-        .background(PNTheme.card)
+        .background(theme.card)
         .clipShape(RoundedRectangle(cornerRadius: 12))
         .shadow(color: .black.opacity(isFocused ? 0.12 : 0.06), radius: isFocused ? 8 : 4, x: 0, y: 2)
         .onAppear { text = store.readContent(of: note) }

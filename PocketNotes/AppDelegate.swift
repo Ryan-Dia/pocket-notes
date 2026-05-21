@@ -1,11 +1,14 @@
 import AppKit
 import Carbon
+import Combine
 import SwiftUI
 import Sparkle
 
 final class AppDelegate: NSObject, NSApplicationDelegate {
     let notesStore = NotesStore()
+    let themeStore = ThemeStore()
     private var panelController: PanelController?
+    private var themeCancellable: AnyCancellable?
     private var statusItem: NSStatusItem?
     private var hotkey: GlobalHotkey?
     private var contextMenu: NSMenu?
@@ -20,6 +23,7 @@ final class AppDelegate: NSObject, NSApplicationDelegate {
         setupPanel()
         setupHotkey()
         setupLocalHotkeys()
+        setupThemeObserver()
     }
 
     private func setupMenuBar() {
@@ -52,6 +56,7 @@ final class AppDelegate: NSObject, NSApplicationDelegate {
     private func setupPanel() {
         let contentView = ContentView()
             .environmentObject(notesStore)
+            .environmentObject(themeStore)
         panelController = PanelController(contentView: AnyView(contentView))
     }
 
@@ -84,6 +89,21 @@ final class AppDelegate: NSObject, NSApplicationDelegate {
             object: nil,
             queue: .main
         ) { [weak self] _ in self?.applyLocalHotkeySettings() }
+    }
+
+    private func setupThemeObserver() {
+        themeCancellable = themeStore.objectWillChange
+            .receive(on: DispatchQueue.main)
+            .sink { [weak self] in
+                DispatchQueue.main.async { self?.updateWindowAppearance() }
+            }
+        updateWindowAppearance()
+    }
+
+    private func updateWindowAppearance() {
+        let appearance = NSAppearance(named: themeStore.isDark ? .darkAqua : .aqua)
+        panelController?.panel.appearance = appearance
+        settingsWindow?.appearance = appearance
     }
 
     private func applyLocalHotkeySettings() {
@@ -127,7 +147,9 @@ final class AppDelegate: NSObject, NSApplicationDelegate {
         if settingsWindow == nil {
             let view = SettingsView(onCheckForUpdates: { [weak self] in
                 self?.updaterController.checkForUpdates(nil)
-            }).environmentObject(notesStore)
+            })
+            .environmentObject(notesStore)
+            .environmentObject(themeStore)
             let hosting = NSHostingController(rootView: view)
             let window = NSWindow(contentViewController: hosting)
             window.title = "설정"

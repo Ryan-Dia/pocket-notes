@@ -2,6 +2,7 @@ import SwiftUI
 
 struct FolderListView: View {
     @EnvironmentObject var store: NotesStore
+    @EnvironmentObject var theme: ThemeStore
     let onSelectFolder: (NoteNode) -> Void
 
     @State private var renaming: NoteNode? = nil
@@ -20,21 +21,21 @@ struct FolderListView: View {
             Divider().opacity(0.25)
             folderList
         }
-        .background(PNTheme.bg)
+        .background(theme.bg)
     }
 
     private var header: some View {
         HStack(alignment: .center) {
             Text("PocketNotes")
                 .font(.system(size: 22, weight: .bold))
-                .foregroundStyle(PNTheme.heading)
+                .foregroundStyle(theme.heading)
             Spacer()
             Button {
                 withAnimation(.easeInOut(duration: 0.15)) { isSearching.toggle() }
             } label: {
                 Image(systemName: isSearching ? "xmark.circle.fill" : "magnifyingglass")
                     .font(.system(size: 16, weight: .medium))
-                    .foregroundStyle(PNTheme.accent)
+                    .foregroundStyle(theme.accent)
             }
             .buttonStyle(.plain)
             .padding(.trailing, 10)
@@ -42,7 +43,7 @@ struct FolderListView: View {
             Button { store.createFolder() } label: {
                 Image(systemName: "folder.badge.plus")
                     .font(.system(size: 18, weight: .semibold))
-                    .foregroundStyle(PNTheme.accent)
+                    .foregroundStyle(theme.accent)
             }
             .buttonStyle(.plain)
         }
@@ -61,7 +62,7 @@ struct FolderListView: View {
         }
         .padding(.horizontal, 12)
         .padding(.vertical, 8)
-        .background(PNTheme.card)
+        .background(theme.card)
         .clipShape(RoundedRectangle(cornerRadius: 8))
         .padding(.horizontal, 12)
         .padding(.bottom, 6)
@@ -96,7 +97,7 @@ struct FolderListView: View {
         return HStack(spacing: 14) {
             Image(systemName: "folder")
                 .font(.system(size: 20))
-                .foregroundStyle(PNTheme.accent)
+                .foregroundStyle(theme.accent)
                 .frame(width: 28)
             VStack(alignment: .leading, spacing: 2) {
                 Text(node.name)
@@ -116,13 +117,13 @@ struct FolderListView: View {
                 .foregroundStyle(.white)
                 .padding(.horizontal, 7)
                 .padding(.vertical, 2)
-                .background(PNTheme.accent.opacity(0.7))
+                .background(theme.accent.opacity(0.7))
                 .clipShape(Capsule())
         }
         .padding(.horizontal, 16)
         .padding(.vertical, 12)
         .contentShape(Rectangle())
-        .background(PNTheme.bg)
+        .background(theme.bg)
         .onTapGesture { onSelectFolder(node) }
         .contextMenu {
             Button("새 노트") { store.createNote(in: node) }
@@ -141,7 +142,7 @@ struct FolderListView: View {
         HStack(spacing: 14) {
             Image(systemName: "folder")
                 .font(.system(size: 20))
-                .foregroundStyle(PNTheme.accent)
+                .foregroundStyle(theme.accent)
                 .frame(width: 28)
             TextField("폴더 이름", text: $renameText)
                 .onSubmit {
@@ -174,7 +175,7 @@ struct FolderListView: View {
         VStack(spacing: 12) {
             Image(systemName: "folder.badge.plus")
                 .font(.system(size: 40))
-                .foregroundStyle(PNTheme.accent.opacity(0.4))
+                .foregroundStyle(theme.accent.opacity(0.4))
             Text("+ 버튼으로 폴더를 만드세요")
                 .font(.callout)
                 .foregroundStyle(.secondary)

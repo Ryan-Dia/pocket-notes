@@ -1,19 +1,13 @@
 import SwiftUI
 
-enum PNTheme {
-    static let bg      = Color(red: 0.969, green: 0.945, blue: 0.890)
-    static let card    = Color(red: 0.984, green: 0.969, blue: 0.937)
-    static let accent  = Color(red: 0.753, green: 0.388, blue: 0.314)
-    static let heading = Color(red: 0.106, green: 0.313, blue: 0.376)
-}
-
 struct ContentView: View {
     @EnvironmentObject var store: NotesStore
+    @EnvironmentObject var theme: ThemeStore
     @State private var navigationStack: [NoteNode] = []
 
     var body: some View {
         ZStack {
-            PNTheme.bg.ignoresSafeArea()
+            theme.bg.ignoresSafeArea()
             currentView
                 .id(navigationStack.count)
         }

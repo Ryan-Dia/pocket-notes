@@ -2,6 +2,7 @@ import SwiftUI
 
 struct FolderContentsView: View {
     @EnvironmentObject var store: NotesStore
+    @EnvironmentObject var theme: ThemeStore
     let folder: NoteNode
     let onBack: () -> Void
     let onSelectSubfolder: (NoteNode) -> Void
@@ -29,7 +30,7 @@ struct FolderContentsView: View {
                 }
             }
         }
-        .background(PNTheme.bg)
+        .background(theme.bg)
     }
 
     // MARK: - Header
@@ -39,14 +40,14 @@ struct FolderContentsView: View {
             Button { onBack() } label: {
                 Image(systemName: "chevron.left")
                     .font(.system(size: 16, weight: .semibold))
-                    .foregroundStyle(PNTheme.accent)
+                    .foregroundStyle(theme.accent)
             }
             .buttonStyle(.plain)
             .padding(.trailing, 4)
 
             Text(folder.name)
                 .font(.system(size: 20, weight: .bold))
-                .foregroundStyle(PNTheme.heading)
+                .foregroundStyle(theme.heading)
                 .lineLimit(1)
 
             Spacer()
@@ -55,7 +56,7 @@ struct FolderContentsView: View {
             Button { store.createNote(in: folder) } label: {
                 Image(systemName: "plus")
                     .font(.system(size: 17, weight: .semibold))
-                    .foregroundStyle(PNTheme.accent)
+                    .foregroundStyle(theme.accent)
             }
             .buttonStyle(.plain)
             .padding(.trailing, 8)
@@ -65,7 +66,7 @@ struct FolderContentsView: View {
                 Button { store.createFolder(in: folder) } label: {
                     Image(systemName: "folder.badge.plus")
                         .font(.system(size: 17, weight: .semibold))
-                        .foregroundStyle(PNTheme.accent)
+                        .foregroundStyle(theme.accent)
                 }
                 .buttonStyle(.plain)
             }
@@ -95,7 +96,7 @@ struct FolderContentsView: View {
         return HStack(spacing: 14) {
             Image(systemName: "folder")
                 .font(.system(size: 20))
-                .foregroundStyle(PNTheme.accent)
+                .foregroundStyle(theme.accent)
                 .frame(width: 28)
             Text(node.name)
                 .font(.system(size: 16))
@@ -107,13 +108,13 @@ struct FolderContentsView: View {
                 .foregroundStyle(.white)
                 .padding(.horizontal, 7)
                 .padding(.vertical, 2)
-                .background(PNTheme.accent.opacity(0.7))
+                .background(theme.accent.opacity(0.7))
                 .clipShape(Capsule())
         }
         .padding(.horizontal, 16)
         .padding(.vertical, 12)
         .contentShape(Rectangle())
-        .background(PNTheme.bg)
+        .background(theme.bg)
         .onTapGesture { onSelectSubfolder(node) }
         .contextMenu {
             Button("새 노트") { store.createNote(in: node) }
@@ -130,7 +131,7 @@ struct FolderContentsView: View {
         HStack(spacing: 14) {
             Image(systemName: "folder")
                 .font(.system(size: 20))
-                .foregroundStyle(PNTheme.accent)
+                .foregroundStyle(theme.accent)
                 .frame(width: 28)
             TextField("폴더 이름", text: $renameText)
                 .onSubmit {
@@ -164,7 +165,7 @@ struct FolderContentsView: View {
         VStack(spacing: 12) {
             Image(systemName: "note.text.badge.plus")
                 .font(.system(size: 40))
-                .foregroundStyle(PNTheme.accent.opacity(0.4))
+                .foregroundStyle(theme.accent.opacity(0.4))
             Text("노트를 추가하세요")
                 .font(.callout)
                 .foregroundStyle(.secondary)

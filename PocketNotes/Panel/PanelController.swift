@@ -6,7 +6,7 @@ enum PanelEdge: String {
 }
 
 final class PanelController {
-    private let panel: SlidingPanel
+    let panel: SlidingPanel
     private var isVisible = false
     private var resignObserver: NSObjectProtocol?
     private var activeScreen: NSScreen?
