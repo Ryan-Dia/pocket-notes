@@ -48,7 +48,11 @@ final class NotesStore: ObservableObject {
         ) else { return [] }
 
         return contents
-            .sorted { $0.lastPathComponent < $1.lastPathComponent }
+            .sorted {
+                let a = (try? $0.resourceValues(forKeys: [.creationDateKey]).creationDate) ?? .distantPast
+                let b = (try? $1.resourceValues(forKeys: [.creationDateKey]).creationDate) ?? .distantPast
+                return a > b
+            }
             .compactMap { fileURL -> NoteNode? in
                 let isDir = (try? fileURL.resourceValues(forKeys: [.isDirectoryKey]))?.isDirectory ?? false
                 if isDir {
@@ -62,6 +66,45 @@ final class NotesStore: ObservableObject {
             }
     }
 
+    // MARK: - Order
+
+    func orderedFolders(_ nodes: [NoteNode], in parentURL: URL) -> [NoteNode] {
+        let order = OrderStore.load(for: parentURL)
+        return applyOrder(savedNames: order.folders, to: nodes, key: { $0.name })
+    }
+
+    func orderedNotes(_ nodes: [NoteNode], in parentURL: URL) -> [NoteNode] {
+        let order = OrderStore.load(for: parentURL)
+        return applyOrder(savedNames: order.notes, to: nodes, key: { $0.url.lastPathComponent })
+    }
+
+    func reorderFolders(in parentURL: URL, from: IndexSet, to: Int, current: [NoteNode]) {
+        var names = current.map { $0.name }
+        names.move(fromOffsets: from, toOffset: to)
+        var order = OrderStore.load(for: parentURL)
+        order.folders = names
+        OrderStore.save(order, for: parentURL)
+        reload()
+    }
+
+    func reorderNotes(in parentURL: URL, from: IndexSet, to: Int, current: [NoteNode]) {
+        var names = current.map { $0.url.lastPathComponent }
+        names.move(fromOffsets: from, toOffset: to)
+        var order = OrderStore.load(for: parentURL)
+        order.notes = names
+        OrderStore.save(order, for: parentURL)
+        reload()
+    }
+
+    private func applyOrder(savedNames: [String], to nodes: [NoteNode], key: (NoteNode) -> String) -> [NoteNode] {
+        let byName = Dictionary(uniqueKeysWithValues: nodes.map { (key($0), $0) })
+        let tracked = savedNames.compactMap { byName[$0] }
+        let trackedSet = Set(savedNames)
+        // 순서 파일에 없는 항목(외부에서 추가된 경우)은 맨 위에 배치
+        let untracked = nodes.filter { !trackedSet.contains(key($0)) }
+        return untracked + tracked
+    }
+
     // MARK: - CRUD
 
     func createNote(in folder: NoteNode? = nil, name: String = "새 노트") {
@@ -73,6 +116,9 @@ final class NotesStore: ObservableObject {
             counter += 1
         }
         try? "".write(to: target, atomically: true, encoding: .utf8)
+        var order = OrderStore.load(for: parent)
+        order.notes.insert(target.lastPathComponent, at: 0)
+        OrderStore.save(order, for: parent)
         reload()
         selectedNode = findNode(url: target, in: roots)
     }
@@ -86,18 +132,39 @@ final class NotesStore: ObservableObject {
             counter += 1
         }
         try? FileManager.default.createDirectory(at: target, withIntermediateDirectories: false)
+        var order = OrderStore.load(for: parentURL)
+        order.folders.insert(target.lastPathComponent, at: 0)
+        OrderStore.save(order, for: parentURL)
         reload()
     }
 
     func delete(_ node: NoteNode) {
+        let parentURL = node.url.deletingLastPathComponent()
+        var order = OrderStore.load(for: parentURL)
+        if node.isFolder {
+            order.folders.removeAll { $0 == node.name }
+        } else {
+            order.notes.removeAll { $0 == node.url.lastPathComponent }
+        }
+        OrderStore.save(order, for: parentURL)
         if selectedNode?.url == node.url { selectedNode = nil }
         try? FileManager.default.trashItem(at: node.url, resultingItemURL: nil)
         reload()
     }
 
     func rename(_ node: NoteNode, to newName: String) {
+        let parentURL = node.url.deletingLastPathComponent()
         let ext = node.isFolder ? "" : ".md"
-        let newURL = node.url.deletingLastPathComponent().appendingPathComponent(newName + ext)
+        let newURL = parentURL.appendingPathComponent(newName + ext)
+        let oldKey = node.isFolder ? node.name : node.url.lastPathComponent
+        let newKey = newName + ext
+        var order = OrderStore.load(for: parentURL)
+        if node.isFolder {
+            if let idx = order.folders.firstIndex(of: oldKey) { order.folders[idx] = newKey }
+        } else {
+            if let idx = order.notes.firstIndex(of: oldKey) { order.notes[idx] = newKey }
+        }
+        OrderStore.save(order, for: parentURL)
         try? FileManager.default.moveItem(at: node.url, to: newURL)
         reload()
         if selectedNode?.url == node.url {
@@ -110,15 +177,15 @@ final class NotesStore: ObservableObject {
     }
 
     func saveContent(_ content: String, to node: NoteNode) {
+        let existing = (try? String(contentsOf: node.url, encoding: .utf8)) ?? ""
+        guard existing != content else { return }
         try? content.write(to: node.url, atomically: true, encoding: .utf8)
     }
 
-    // depth 계산: rootURL 기준 상대 깊이 (최상위 폴더=0, 상위=1, 하위=2)
     func depth(of node: NoteNode) -> Int {
         node.url.pathComponents.count - rootURL.pathComponents.count - 1
     }
 
-    // URL로 노드 탐색 (FolderContentsView의 폴더 삭제 감지용)
     func findFolder(url: URL) -> NoteNode? {
         findNode(url: url, in: roots)
     }

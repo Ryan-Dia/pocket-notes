@@ -9,17 +9,29 @@ struct FolderListView: View {
     @State private var renameText = ""
     @State private var searchQuery = ""
     @State private var isSearching = false
+    @State private var hoveredFolderID: String?
+    @State private var showCustomPicker = false
 
-    private var folders: [NoteNode] { store.roots.filter { $0.isFolder } }
+    // Drag state
+    @State private var dragFolder: NoteNode? = nil
+    @State private var dragFolderStartIdx: Int = 0
+    @State private var dragFolderTranslation: CGFloat = 0
+    @State private var dragFolderTargetIdx: Int = 0
+
+    private let folderItemHeight: CGFloat = 66
+
+    private var allFolders: [NoteNode] {
+        store.orderedFolders(store.roots.filter { $0.isFolder }, in: store.rootURL)
+    }
 
     var body: some View {
         VStack(spacing: 0) {
             header
-            if isSearching {
-                searchBar
-            }
+            if isSearching { searchBar }
             Divider().opacity(0.25)
             folderList
+            Divider().opacity(0.25)
+            themeSelectorBar
         }
         .background(theme.bg)
     }
@@ -69,29 +81,53 @@ struct FolderListView: View {
     }
 
     private var filteredFolders: [NoteNode] {
-        if searchQuery.isEmpty { return folders }
-        return folders.filter { $0.name.localizedCaseInsensitiveContains(searchQuery) }
+        if searchQuery.isEmpty { return allFolders }
+        return allFolders.filter { $0.name.localizedCaseInsensitiveContains(searchQuery) }
     }
 
     private var folderList: some View {
         ScrollView {
             LazyVStack(spacing: 0) {
-                ForEach(filteredFolders) { node in
-                    if renaming?.id == node.id {
-                        renameRow(for: node)
-                    } else {
-                        folderRow(for: node)
+                ForEach(Array(filteredFolders.enumerated()), id: \.element.id) { idx, node in
+                    let isDraggingThis = dragFolder?.id == node.id
+                    let draggingDown = dragFolderTargetIdx > dragFolderStartIdx
+                    let insertAbove = dragFolder != nil && !isDraggingThis
+                        && dragFolderTargetIdx == idx
+                        && !draggingDown
+                        && dragFolderTargetIdx != dragFolderStartIdx
+                    let insertBelow = dragFolder != nil && !isDraggingThis
+                        && dragFolderTargetIdx == idx
+                        && draggingDown
+
+                    Group {
+                        if renaming?.id == node.id {
+                            renameRow(for: node)
+                        } else {
+                            folderRow(for: node, idx: idx)
+                                .offset(y: isDraggingThis ? dragFolderTranslation : 0)
+                                .scaleEffect(isDraggingThis ? 1.02 : 1.0)
+                                .shadow(color: isDraggingThis ? .black.opacity(0.12) : .clear, radius: 6, x: 0, y: 3)
+                                .zIndex(isDraggingThis ? 1 : 0)
+                                .overlay(alignment: .top) {
+                                    if insertAbove {
+                                        Rectangle().fill(theme.accent).frame(height: 2).padding(.leading, 58)
+                                    }
+                                }
+                                .overlay(alignment: .bottom) {
+                                    if insertBelow {
+                                        Rectangle().fill(theme.accent).frame(height: 2).padding(.leading, 58)
+                                    }
+                                }
+                        }
                     }
-                    Divider()
-                        .opacity(0.2)
-                        .padding(.leading, 56)
+                    Divider().opacity(isDraggingThis ? 0 : 0.2).padding(.leading, 56)
                 }
                 if filteredFolders.isEmpty { emptyHint }
             }
         }
     }
 
-    private func folderRow(for node: NoteNode) -> some View {
+    private func folderRow(for node: NoteNode, idx: Int) -> some View {
         let noteCount = node.children?.filter { !$0.isFolder }.count ?? 0
         let preview = recentNotePreview(in: node)
         return HStack(spacing: 14) {
@@ -112,6 +148,14 @@ struct FolderListView: View {
                 }
             }
             Spacer()
+            dotGrid
+                .frame(width: 20, height: 20)
+                .contentShape(Rectangle())
+                .gesture(folderDragGesture(node: node, idx: idx))
+                .onHover { isHovered in
+                    if dragFolder == nil { hoveredFolderID = isHovered ? node.id : nil }
+                }
+                .opacity(hoveredFolderID == node.id && dragFolder == nil ? 1 : 0.18)
             Text("\(noteCount)")
                 .font(.system(size: 13, weight: .medium))
                 .foregroundStyle(.white)
@@ -122,6 +166,7 @@ struct FolderListView: View {
         }
         .padding(.horizontal, 16)
         .padding(.vertical, 12)
+        .opacity(dragFolder?.id == node.id ? 0.35 : 1.0)
         .contentShape(Rectangle())
         .background(theme.bg)
         .onTapGesture { onSelectFolder(node) }
@@ -129,13 +174,55 @@ struct FolderListView: View {
             Button("새 노트") { store.createNote(in: node) }
             Button("새 하위 폴더") { store.createFolder(in: node) }
             Divider()
-            Button("이름 변경") {
-                renameText = node.name
-                renaming = node
-            }
+            Button("이름 변경") { renameText = node.name; renaming = node }
             Divider()
             Button("삭제", role: .destructive) { store.delete(node) }
         }
+    }
+
+    private var dotGrid: some View {
+        VStack(spacing: 3) {
+            ForEach(0..<3, id: \.self) { _ in
+                HStack(spacing: 3) {
+                    Circle().frame(width: 3, height: 3)
+                    Circle().frame(width: 3, height: 3)
+                }
+            }
+        }
+        .foregroundStyle(Color.secondary.opacity(0.5))
+    }
+
+    private func folderDragGesture(node: NoteNode, idx: Int) -> some Gesture {
+        DragGesture(minimumDistance: 5, coordinateSpace: .global)
+            .onChanged { val in
+                if dragFolder == nil {
+                    dragFolder = node
+                    dragFolderStartIdx = idx
+                    dragFolderTargetIdx = idx
+                }
+                dragFolderTranslation = val.translation.height
+                let delta = Int((dragFolderTranslation / folderItemHeight).rounded())
+                dragFolderTargetIdx = max(0, min(filteredFolders.count - 1, dragFolderStartIdx + delta))
+            }
+            .onEnded { _ in
+                let from = dragFolderStartIdx
+                let to = dragFolderTargetIdx
+                if from != to {
+                    // filteredFolders 기준 인덱스를 allFolders 기준 인덱스로 변환
+                    let folders = filteredFolders
+                    let all = allFolders
+                    if from < folders.count && to < folders.count {
+                        let fromID = folders[from].id
+                        let toID = folders[to].id
+                        let allFrom = all.firstIndex(where: { $0.id == fromID }) ?? from
+                        let allTo = all.firstIndex(where: { $0.id == toID }) ?? to
+                        store.reorderFolders(in: store.rootURL, from: IndexSet([allFrom]), to: allTo > allFrom ? allTo + 1 : allTo, current: all)
+                    }
+                }
+                dragFolder = nil
+                dragFolderTranslation = 0
+                dragFolderTargetIdx = 0
+            }
     }
 
     private func renameRow(for node: NoteNode) -> some View {
@@ -182,5 +269,88 @@ struct FolderListView: View {
         }
         .frame(maxWidth: .infinity)
         .padding(.top, 60)
+    }
+
+    // MARK: - Theme Selector
+
+    private var themeSelectorBar: some View {
+        HStack(spacing: 10) {
+            ForEach(ThemeStore.presets) { preset in
+                ThemeSwatchButton(
+                    accentHex: preset.accentHex,
+                    isSelected: theme.selectedPreset == preset.id
+                ) {
+                    theme.applyPreset(preset)
+                }
+            }
+            Button {
+                theme.selectedPreset = "custom"
+                showCustomPicker = true
+            } label: {
+                ZStack {
+                    Circle()
+                        .strokeBorder(
+                            style: StrokeStyle(lineWidth: 1.5, dash: [3])
+                        )
+                        .foregroundStyle(Color.secondary.opacity(0.5))
+                        .frame(width: 22, height: 22)
+                    Image(systemName: "pencil")
+                        .font(.system(size: 9))
+                        .foregroundStyle(.secondary)
+                }
+                .overlay(
+                    Circle()
+                        .strokeBorder(
+                            theme.selectedPreset == "custom" ? Color.primary.opacity(0.4) : Color.clear,
+                            lineWidth: 2
+                        )
+                        .frame(width: 26, height: 26)
+                )
+            }
+            .buttonStyle(.plain)
+            .popover(isPresented: $showCustomPicker, arrowEdge: .bottom) {
+                VStack(alignment: .leading, spacing: 2) {
+                    ThemeColorRow(label: "배경", hex: $theme.bgHex)
+                    ThemeColorRow(label: "카드", hex: $theme.cardHex)
+                    ThemeColorRow(label: "강조", hex: $theme.accentHex)
+                    ThemeColorRow(label: "제목", hex: $theme.headingHex)
+                }
+                .padding(12)
+                .frame(width: 260)
+            }
+        }
+        .padding(.horizontal, 16)
+        .padding(.vertical, 10)
+        .frame(maxWidth: .infinity, alignment: .leading)
+        .background(theme.bg)
+    }
+}
+
+private struct ThemeSwatchButton: View {
+    let accentHex: String
+    let isSelected: Bool
+    let onSelect: () -> Void
+
+    var body: some View {
+        Button(action: onSelect) {
+            Circle()
+                .fill(Color(hex: accentHex) ?? .gray)
+                .frame(width: 22, height: 22)
+                .overlay(
+                    Circle()
+                        .strokeBorder(Color.white, lineWidth: 2)
+                        .opacity(isSelected ? 1 : 0)
+                )
+                .overlay(
+                    Circle()
+                        .strokeBorder(
+                            (Color(hex: accentHex) ?? .gray).opacity(0.6),
+                            lineWidth: 1.5
+                        )
+                        .frame(width: 27, height: 27)
+                        .opacity(isSelected ? 1 : 0)
+                )
+        }
+        .buttonStyle(.plain)
     }
 }

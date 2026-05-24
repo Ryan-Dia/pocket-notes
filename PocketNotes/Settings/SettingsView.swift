@@ -198,7 +198,7 @@ private struct ThemeCustomSwatch: View {
     }
 }
 
-private struct ThemeColorRow: View {
+struct ThemeColorRow: View {
     let label: String
     @Binding var hex: String
     @State private var fieldText: String = ""
