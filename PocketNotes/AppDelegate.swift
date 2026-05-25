@@ -24,6 +24,9 @@ final class AppDelegate: NSObject, NSApplicationDelegate {
         setupHotkey()
         setupLocalHotkeys()
         setupThemeObserver()
+        NotificationCenter.default.addObserver(
+            forName: .pnOpenSettings, object: nil, queue: .main
+        ) { [weak self] _ in self?.openSettings() }
     }
 
     private func setupMenuBar() {
@@ -143,7 +146,7 @@ final class AppDelegate: NSObject, NSApplicationDelegate {
         updaterController.checkForUpdates(nil)
     }
 
-    @objc private func openSettings() {
+    @objc func openSettings() {
         if settingsWindow == nil {
             let view = SettingsView(onCheckForUpdates: { [weak self] in
                 self?.updaterController.checkForUpdates(nil)

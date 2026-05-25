@@ -15,6 +15,7 @@ final class ThemeStore: ObservableObject {
         PresetTheme(id: "dark",   name: "다크",   bgHex: "#1C1C1E", cardHex: "#3A3A3C", accentHex: "#FF9F0A", headingHex: "#FFFFFF"),
         PresetTheme(id: "mint",   name: "민트",   bgHex: "#E8F5F0", cardHex: "#F0FAF6", accentHex: "#2D9E6B", headingHex: "#1A5C3A"),
         PresetTheme(id: "slate",  name: "슬레이트", bgHex: "#EDF2F7", cardHex: "#F7FAFC", accentHex: "#4A7FA5", headingHex: "#2C4A6E"),
+        PresetTheme(id: "rose",   name: "로즈",   bgHex: "#FCF0F3", cardHex: "#FEF7F9", accentHex: "#C0547A", headingHex: "#7A2B4A"),
     ]
 
     @AppStorage("themePreset")     var selectedPreset: String = "beige"

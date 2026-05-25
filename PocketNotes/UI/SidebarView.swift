@@ -10,7 +10,6 @@ struct FolderListView: View {
     @State private var searchQuery = ""
     @State private var isSearching = false
     @State private var hoveredFolderID: String?
-    @State private var showCustomPicker = false
 
     // Drag state
     @State private var dragFolder: NoteNode? = nil
@@ -31,7 +30,7 @@ struct FolderListView: View {
             Divider().opacity(0.25)
             folderList
             Divider().opacity(0.25)
-            themeSelectorBar
+            bottomBar
         }
         .background(theme.bg)
     }
@@ -128,7 +127,7 @@ struct FolderListView: View {
     }
 
     private func folderRow(for node: NoteNode, idx: Int) -> some View {
-        let noteCount = node.children?.filter { !$0.isFolder }.count ?? 0
+        let noteCount = node.totalNoteCount
         let preview = recentNotePreview(in: node)
         return HStack(spacing: 14) {
             Image(systemName: "folder")
@@ -271,86 +270,22 @@ struct FolderListView: View {
         .padding(.top, 60)
     }
 
-    // MARK: - Theme Selector
+    // MARK: - Bottom Bar
 
-    private var themeSelectorBar: some View {
-        HStack(spacing: 10) {
-            ForEach(ThemeStore.presets) { preset in
-                ThemeSwatchButton(
-                    accentHex: preset.accentHex,
-                    isSelected: theme.selectedPreset == preset.id
-                ) {
-                    theme.applyPreset(preset)
-                }
-            }
+    private var bottomBar: some View {
+        HStack {
             Button {
-                theme.selectedPreset = "custom"
-                showCustomPicker = true
+                NotificationCenter.default.post(name: .pnOpenSettings, object: nil)
             } label: {
-                ZStack {
-                    Circle()
-                        .strokeBorder(
-                            style: StrokeStyle(lineWidth: 1.5, dash: [3])
-                        )
-                        .foregroundStyle(Color.secondary.opacity(0.5))
-                        .frame(width: 22, height: 22)
-                    Image(systemName: "pencil")
-                        .font(.system(size: 9))
-                        .foregroundStyle(.secondary)
-                }
-                .overlay(
-                    Circle()
-                        .strokeBorder(
-                            theme.selectedPreset == "custom" ? Color.primary.opacity(0.4) : Color.clear,
-                            lineWidth: 2
-                        )
-                        .frame(width: 26, height: 26)
-                )
+                Text("⚙️")
+                    .font(.system(size: 20))
             }
             .buttonStyle(.plain)
-            .popover(isPresented: $showCustomPicker, arrowEdge: .bottom) {
-                VStack(alignment: .leading, spacing: 2) {
-                    ThemeColorRow(label: "배경", hex: $theme.bgHex)
-                    ThemeColorRow(label: "카드", hex: $theme.cardHex)
-                    ThemeColorRow(label: "강조", hex: $theme.accentHex)
-                    ThemeColorRow(label: "제목", hex: $theme.headingHex)
-                }
-                .padding(12)
-                .frame(width: 260)
-            }
+            Spacer()
         }
         .padding(.horizontal, 16)
         .padding(.vertical, 10)
-        .frame(maxWidth: .infinity, alignment: .leading)
         .background(theme.bg)
     }
 }
 
-private struct ThemeSwatchButton: View {
-    let accentHex: String
-    let isSelected: Bool
-    let onSelect: () -> Void
-
-    var body: some View {
-        Button(action: onSelect) {
-            Circle()
-                .fill(Color(hex: accentHex) ?? .gray)
-                .frame(width: 22, height: 22)
-                .overlay(
-                    Circle()
-                        .strokeBorder(Color.white, lineWidth: 2)
-                        .opacity(isSelected ? 1 : 0)
-                )
-                .overlay(
-                    Circle()
-                        .strokeBorder(
-                            (Color(hex: accentHex) ?? .gray).opacity(0.6),
-                            lineWidth: 1.5
-                        )
-                        .frame(width: 27, height: 27)
-                        .opacity(isSelected ? 1 : 0)
-                )
-        }
-        .buttonStyle(.plain)
-    }
-}

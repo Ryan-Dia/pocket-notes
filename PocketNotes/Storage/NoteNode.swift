@@ -15,6 +15,15 @@ final class NoteNode: Identifiable, ObservableObject {
     }
 }
 
+extension NoteNode {
+    var totalNoteCount: Int {
+        guard let children else { return 0 }
+        return children.reduce(0) { sum, child in
+            child.isFolder ? sum + child.totalNoteCount : sum + 1
+        }
+    }
+}
+
 extension NoteNode: Hashable {
     static func == (lhs: NoteNode, rhs: NoteNode) -> Bool { lhs.url == rhs.url }
     func hash(into hasher: inout Hasher) { hasher.combine(url) }

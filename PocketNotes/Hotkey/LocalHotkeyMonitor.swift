@@ -4,6 +4,7 @@ import Carbon
 extension Notification.Name {
     static let pnCreateNote   = Notification.Name("pn.local.createNote")
     static let pnCreateFolder = Notification.Name("pn.local.createFolder")
+    static let pnOpenSettings = Notification.Name("pn.openSettings")
 }
 
 final class LocalHotkeyMonitor {
