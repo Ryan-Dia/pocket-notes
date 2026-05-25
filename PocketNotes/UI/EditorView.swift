@@ -9,6 +9,7 @@ struct NoteCardView: View {
     @State private var text = ""
     @State private var saveTimer: AnyCancellable?
     @FocusState private var isFocused: Bool
+    @State private var isHandleHovered = false
 
     private var dateString: String {
         let res = try? note.url.resourceValues(forKeys: [.contentModificationDateKey])
@@ -21,10 +22,23 @@ struct NoteCardView: View {
 
     var body: some View {
         HStack(spacing: 0) {
-            Rectangle()
-                .fill(isFocused ? theme.accent : theme.accent.opacity(0.35))
-                .frame(width: 3)
-                .animation(.easeInOut(duration: 0.15), value: isFocused)
+            ZStack {
+                Rectangle()
+                    .fill(isFocused ? theme.accent : theme.accent.opacity(0.35))
+                    .animation(.easeInOut(duration: 0.15), value: isFocused)
+                VStack(spacing: 4) {
+                    ForEach(0..<3, id: \.self) { _ in
+                        HStack(spacing: 4) {
+                            Circle().frame(width: 4, height: 4)
+                            Circle().frame(width: 4, height: 4)
+                        }
+                    }
+                }
+                .foregroundStyle(Color.white.opacity(isHandleHovered ? 1.0 : 0.6))
+                .animation(.easeInOut(duration: 0.12), value: isHandleHovered)
+            }
+            .frame(width: 18)
+            .onHover { isHandleHovered = $0 }
 
             VStack(alignment: .leading, spacing: 0) {
                 ZStack(alignment: .topLeading) {

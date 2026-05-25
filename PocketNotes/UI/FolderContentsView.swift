@@ -10,7 +10,6 @@ struct FolderContentsView: View {
     @State private var renaming: NoteNode? = nil
     @State private var renameText = ""
     @State private var hoveredFolderID: String?
-    @State private var hoveredNoteID: String?
 
     // Note drag state
     @State private var dragNote: NoteNode? = nil
@@ -148,7 +147,7 @@ struct FolderContentsView: View {
     }
 
     private func subfolderRow(for node: NoteNode, idx: Int) -> some View {
-        let noteCount = node.children?.filter { !$0.isFolder }.count ?? 0
+        let noteCount = node.totalNoteCount
         return HStack(spacing: 14) {
             Image(systemName: "folder")
                 .font(.system(size: 20))
@@ -259,23 +258,15 @@ struct FolderContentsView: View {
                     && draggingDown
 
                 NoteCardView(note: note)
+                    .overlay(alignment: .leading) {
+                        Color.clear
+                            .frame(width: 18)
+                            .contentShape(Rectangle())
+                            .gesture(noteDragGesture(note: note, idx: idx))
+                    }
                     .padding(.horizontal, 12)
                     .padding(.top, 12)
                     .opacity(isDraggingThis ? 0.3 : 1.0)
-                    .overlay(alignment: .topTrailing) {
-                        dotGrid
-                            .frame(width: 24, height: 24)
-                            .contentShape(Rectangle())
-                            .gesture(noteDragGesture(note: note, idx: idx))
-                            .onHover { isHovered in
-                                if dragNote == nil {
-                                    hoveredNoteID = isHovered ? note.id : nil
-                                }
-                            }
-                            .opacity(hoveredNoteID == note.id && dragNote == nil ? 1 : 0.18)
-                            .padding(.top, 10)
-                            .padding(.trailing, 12)
-                    }
                 .offset(y: isDraggingThis ? dragNoteTranslation : 0)
                 .scaleEffect(isDraggingThis ? 1.02 : 1.0)
                 .shadow(color: isDraggingThis ? .black.opacity(0.15) : .clear, radius: 10, x: 0, y: 4)
