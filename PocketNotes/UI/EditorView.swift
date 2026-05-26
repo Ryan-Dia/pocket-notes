@@ -11,13 +11,17 @@ struct NoteCardView: View {
     @FocusState private var isFocused: Bool
     @State private var isHandleHovered = false
 
-    private var dateString: String {
-        let res = try? note.url.resourceValues(forKeys: [.contentModificationDateKey])
-        guard let date = res?.contentModificationDate else { return "" }
+    private static let dateFormatter: DateFormatter = {
         let f = DateFormatter()
         f.dateStyle = .short
         f.timeStyle = .short
-        return f.string(from: date)
+        return f
+    }()
+
+    private var dateString: String {
+        let res = try? note.url.resourceValues(forKeys: [.contentModificationDateKey])
+        guard let date = res?.contentModificationDate else { return "" }
+        return Self.dateFormatter.string(from: date)
     }
 
     var body: some View {

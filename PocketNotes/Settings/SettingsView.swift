@@ -36,7 +36,7 @@ struct SettingsView: View {
                         onChange: { code, mods in
                             UserDefaults.standard.set(code, forKey: "hotkeyKeyCode")
                             UserDefaults.standard.set(mods, forKey: "hotkeyModifiers")
-                            NotificationCenter.default.post(name: .init("pn.hotkeyDidChange"), object: nil)
+                            NotificationCenter.default.post(name: .pnHotkeyDidChange, object: nil)
                         }
                     )
                     .frame(width: 160, height: 28)
@@ -48,7 +48,7 @@ struct SettingsView: View {
                         onChange: { code, mods in
                             UserDefaults.standard.set(code, forKey: "createNoteKeyCode")
                             UserDefaults.standard.set(mods, forKey: "createNoteModifiers")
-                            NotificationCenter.default.post(name: .init("pn.localHotkeyDidChange"), object: nil)
+                            NotificationCenter.default.post(name: .pnLocalHotkeyDidChange, object: nil)
                         }
                     )
                     .frame(width: 160, height: 28)
@@ -60,7 +60,7 @@ struct SettingsView: View {
                         onChange: { code, mods in
                             UserDefaults.standard.set(code, forKey: "createFolderKeyCode")
                             UserDefaults.standard.set(mods, forKey: "createFolderModifiers")
-                            NotificationCenter.default.post(name: .init("pn.localHotkeyDidChange"), object: nil)
+                            NotificationCenter.default.post(name: .pnLocalHotkeyDidChange, object: nil)
                         }
                     )
                     .frame(width: 160, height: 28)

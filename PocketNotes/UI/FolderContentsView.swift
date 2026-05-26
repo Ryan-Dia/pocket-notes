@@ -43,9 +43,6 @@ struct FolderContentsView: View {
                 LazyVStack(spacing: 0) {
                     if !subfolders.isEmpty {
                         subfolderSection
-                    }
-                    if !subfolders.isEmpty {
-                        // Section label A: "노트" + 오른쪽 선
                         HStack(spacing: 8) {
                             Text("노트")
                                 .font(.system(size: 10, weight: .semibold))
@@ -123,7 +120,11 @@ struct FolderContentsView: View {
 
             Group {
                 if renaming?.id == node.id {
-                    renameRow(for: node)
+                    FolderRenameRow(text: $renameText) {
+                        let t = renameText.trimmingCharacters(in: .whitespaces)
+                        if !t.isEmpty { store.rename(node, to: t) }
+                        renaming = nil
+                    } onCancel: { renaming = nil }
                 } else {
                     subfolderRow(for: node, idx: idx)
                         .offset(y: isDraggingThis ? dragFolderTranslation : 0)
@@ -158,7 +159,7 @@ struct FolderContentsView: View {
                 .foregroundStyle(.primary)
                 .lineLimit(1)
             Spacer()
-            dotGrid
+            DragHandle()
                 .frame(width: 20, height: 20)
                 .contentShape(Rectangle())
                 .gesture(folderDragGesture(node: node, idx: idx))
@@ -188,18 +189,6 @@ struct FolderContentsView: View {
         }
     }
 
-    private var dotGrid: some View {
-        VStack(spacing: 3) {
-            ForEach(0..<3, id: \.self) { _ in
-                HStack(spacing: 3) {
-                    Circle().frame(width: 3, height: 3)
-                    Circle().frame(width: 3, height: 3)
-                }
-            }
-        }
-        .foregroundStyle(Color.secondary.opacity(0.5))
-    }
-
     private func folderDragGesture(node: NoteNode, idx: Int) -> some Gesture {
         DragGesture(minimumDistance: 5, coordinateSpace: .global)
             .onChanged { val in
@@ -222,24 +211,6 @@ struct FolderContentsView: View {
                 dragFolderTranslation = 0
                 dragFolderTargetIdx = 0
             }
-    }
-
-    private func renameRow(for node: NoteNode) -> some View {
-        HStack(spacing: 14) {
-            Image(systemName: "folder")
-                .font(.system(size: 20))
-                .foregroundStyle(theme.accent)
-                .frame(width: 28)
-            TextField("폴더 이름", text: $renameText)
-                .onSubmit {
-                    let t = renameText.trimmingCharacters(in: .whitespaces)
-                    if !t.isEmpty { store.rename(node, to: t) }
-                    renaming = nil
-                }
-                .onExitCommand { renaming = nil }
-        }
-        .padding(.horizontal, 16)
-        .padding(.vertical, 14)
     }
 
     // MARK: - Note Section

@@ -34,7 +34,7 @@ struct ContentView: View {
     @ViewBuilder
     private var currentView: some View {
         if navigationStack.isEmpty {
-            FolderListView(onSelectFolder: handleSelectFolder)
+            FolderListView(onSelectFolder: push)
             .transition(.asymmetric(
                 insertion: .move(edge: .leading),
                 removal: .move(edge: .leading)
@@ -43,7 +43,7 @@ struct ContentView: View {
             FolderContentsView(
                 folder: navigationStack.last!,
                 onBack: handleBack,
-                onSelectSubfolder: handleSelectSubfolder
+                onSelectSubfolder: push
             )
             .transition(.asymmetric(
                 insertion: .move(edge: .trailing),
@@ -52,7 +52,7 @@ struct ContentView: View {
         }
     }
 
-    private func handleSelectFolder(_ folder: NoteNode) {
+    private func push(_ folder: NoteNode) {
         withAnimation(.easeInOut(duration: 0.18)) {
             navigationStack.append(folder)
         }
@@ -62,12 +62,6 @@ struct ContentView: View {
         guard !navigationStack.isEmpty else { return }
         withAnimation(.easeInOut(duration: 0.18)) {
             navigationStack.removeLast()
-        }
-    }
-
-    private func handleSelectSubfolder(_ subfolder: NoteNode) {
-        withAnimation(.easeInOut(duration: 0.18)) {
-            navigationStack.append(subfolder)
         }
     }
 }

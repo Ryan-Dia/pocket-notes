@@ -68,7 +68,7 @@ final class AppDelegate: NSObject, NSApplicationDelegate {
             self?.togglePanel()
         }
         NotificationCenter.default.addObserver(
-            forName: Notification.Name("pn.hotkeyDidChange"),
+            forName: .pnHotkeyDidChange,
             object: nil,
             queue: .main
         ) { [weak self] _ in
@@ -88,7 +88,7 @@ final class AppDelegate: NSObject, NSApplicationDelegate {
         localMonitor = LocalHotkeyMonitor()
         applyLocalHotkeySettings()
         NotificationCenter.default.addObserver(
-            forName: Notification.Name("pn.localHotkeyDidChange"),
+            forName: .pnLocalHotkeyDidChange,
             object: nil,
             queue: .main
         ) { [weak self] _ in self?.applyLocalHotkeySettings() }

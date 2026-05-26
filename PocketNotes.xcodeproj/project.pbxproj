@@ -10,7 +10,6 @@
 		02FEB9B4009D14C219615351 /* GlobalHotkey.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1C70ADEEEC6866BBDAA2AFF9 /* GlobalHotkey.swift */; };
 		0C83DF68A9D29D2DCF73B257 /* MarkdownPreview.swift in Sources */ = {isa = PBXBuildFile; fileRef = 98B120A42C43D20C91A07221 /* MarkdownPreview.swift */; };
 		11C97685686FC00D8CD5468B /* NoteNode.swift in Sources */ = {isa = PBXBuildFile; fileRef = 63D9AFF1DD159A1FB2B27F07 /* NoteNode.swift */; };
-		A3F5C9D1E4B2F8A6D7E3C9B5 /* OrderStore.swift in Sources */ = {isa = PBXBuildFile; fileRef = C8B4A2E6F1D9C7A5B3E4F2D8 /* OrderStore.swift */; };
 		25EA51B68C7C1E3C3F259F5B /* FolderContentsView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7CFF7F3EB71A6770626A00CF /* FolderContentsView.swift */; };
 		26BF53828307163DFE0340CC /* ThemeStore.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1B1F197E53CEA86A40034832 /* ThemeStore.swift */; };
 		2FAAA07A6B8B787D451A12BE /* NotesStore.swift in Sources */ = {isa = PBXBuildFile; fileRef = 668F727AE15506978DDC28A6 /* NotesStore.swift */; };
@@ -21,19 +20,21 @@
 		9479CE43E686E04F4AFA0665 /* Sparkle in Frameworks */ = {isa = PBXBuildFile; productRef = EFFF4A107804D8D9CAE12AC3 /* Sparkle */; };
 		988EA10B51C40C8AFD74FE85 /* PanelController.swift in Sources */ = {isa = PBXBuildFile; fileRef = C7C69F16DF01DB38768E671C /* PanelController.swift */; };
 		B4033D52606DA001345ADE7D /* ContentView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9167DD3F355CDAE580B340E6 /* ContentView.swift */; };
+		B76FC2FC2407915FD85C96DB /* OrderStore.swift in Sources */ = {isa = PBXBuildFile; fileRef = 18B10F8FBF063447D7C4F068 /* OrderStore.swift */; };
 		C389533195135CF450B1E858 /* SettingsView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 84A865B606225E99C18C5EFA /* SettingsView.swift */; };
 		C587FDBB069FF5D320126975 /* EditorView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 95FAF694362A972A6370D32B /* EditorView.swift */; };
 		CCED5D3DEE3C084ACD4D57ED /* FolderWatcher.swift in Sources */ = {isa = PBXBuildFile; fileRef = DCB1D56572D7023AE51D5C5F /* FolderWatcher.swift */; };
 		D57166278FC09187DD129BA5 /* LocalHotkeyMonitor.swift in Sources */ = {isa = PBXBuildFile; fileRef = 83FC1292A3A4C2CD23E1C899 /* LocalHotkeyMonitor.swift */; };
+		DC7CE7E6415975FE21EB2BB3 /* SharedComponents.swift in Sources */ = {isa = PBXBuildFile; fileRef = F3231F73CBD0E9F54F6FFF0D /* SharedComponents.swift */; };
 		F4C63AB3A52DBCCEF3C7FA74 /* HotkeyRecorderView.swift in Sources */ = {isa = PBXBuildFile; fileRef = BEB6B24E6636518D198DCD0B /* HotkeyRecorderView.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
+		18B10F8FBF063447D7C4F068 /* OrderStore.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = OrderStore.swift; sourceTree = "<group>"; };
 		1B1F197E53CEA86A40034832 /* ThemeStore.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ThemeStore.swift; sourceTree = "<group>"; };
 		1C70ADEEEC6866BBDAA2AFF9 /* GlobalHotkey.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GlobalHotkey.swift; sourceTree = "<group>"; };
 		371CD77B68A9A52E22B41082 /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
 		63D9AFF1DD159A1FB2B27F07 /* NoteNode.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NoteNode.swift; sourceTree = "<group>"; };
-		C8B4A2E6F1D9C7A5B3E4F2D8 /* OrderStore.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = OrderStore.swift; sourceTree = "<group>"; };
 		668F727AE15506978DDC28A6 /* NotesStore.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NotesStore.swift; sourceTree = "<group>"; };
 		7CFF7F3EB71A6770626A00CF /* FolderContentsView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FolderContentsView.swift; sourceTree = "<group>"; };
 		7FFF592FF9D661DD893DE3A9 /* PocketNotes.entitlements */ = {isa = PBXFileReference; lastKnownFileType = text.plist.entitlements; path = PocketNotes.entitlements; sourceTree = "<group>"; };
@@ -49,6 +50,7 @@
 		C7C69F16DF01DB38768E671C /* PanelController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PanelController.swift; sourceTree = "<group>"; };
 		DCB1D56572D7023AE51D5C5F /* FolderWatcher.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FolderWatcher.swift; sourceTree = "<group>"; };
 		DDFBB40DBF67008DD8D91C8B /* PocketNotesApp.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PocketNotesApp.swift; sourceTree = "<group>"; };
+		F3231F73CBD0E9F54F6FFF0D /* SharedComponents.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SharedComponents.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -119,6 +121,7 @@
 				95FAF694362A972A6370D32B /* EditorView.swift */,
 				7CFF7F3EB71A6770626A00CF /* FolderContentsView.swift */,
 				98B120A42C43D20C91A07221 /* MarkdownPreview.swift */,
+				F3231F73CBD0E9F54F6FFF0D /* SharedComponents.swift */,
 				818613C21C76992EED9A62E8 /* SidebarView.swift */,
 			);
 			path = UI;
@@ -148,7 +151,7 @@
 				DCB1D56572D7023AE51D5C5F /* FolderWatcher.swift */,
 				63D9AFF1DD159A1FB2B27F07 /* NoteNode.swift */,
 				668F727AE15506978DDC28A6 /* NotesStore.swift */,
-				C8B4A2E6F1D9C7A5B3E4F2D8 /* OrderStore.swift */,
+				18B10F8FBF063447D7C4F068 /* OrderStore.swift */,
 			);
 			path = Storage;
 			sourceTree = "<group>";
@@ -228,10 +231,11 @@
 				0C83DF68A9D29D2DCF73B257 /* MarkdownPreview.swift in Sources */,
 				11C97685686FC00D8CD5468B /* NoteNode.swift in Sources */,
 				2FAAA07A6B8B787D451A12BE /* NotesStore.swift in Sources */,
-				A3F5C9D1E4B2F8A6D7E3C9B5 /* OrderStore.swift in Sources */,
+				B76FC2FC2407915FD85C96DB /* OrderStore.swift in Sources */,
 				988EA10B51C40C8AFD74FE85 /* PanelController.swift in Sources */,
 				91FDD525F362F1F721C8B711 /* PocketNotesApp.swift in Sources */,
 				C389533195135CF450B1E858 /* SettingsView.swift in Sources */,
+				DC7CE7E6415975FE21EB2BB3 /* SharedComponents.swift in Sources */,
 				8F286E6C807DBE806DE921A5 /* SidebarView.swift in Sources */,
 				9464B83426D82B33B10E94B0 /* SlidingPanel.swift in Sources */,
 				26BF53828307163DFE0340CC /* ThemeStore.swift in Sources */,
@@ -277,7 +281,7 @@
 				CODE_SIGN_IDENTITY = "-";
 				CODE_SIGN_STYLE = Automatic;
 				COPY_PHASE_STRIP = NO;
-				CURRENT_PROJECT_VERSION = 2;
+				CURRENT_PROJECT_VERSION = 3;
 				DEBUG_INFORMATION_FORMAT = dwarf;
 				DEVELOPMENT_TEAM = "";
 				ENABLE_STRICT_OBJC_MSGSEND = YES;
@@ -297,7 +301,7 @@
 				GCC_WARN_UNUSED_FUNCTION = YES;
 				GCC_WARN_UNUSED_VARIABLE = YES;
 				MACOSX_DEPLOYMENT_TARGET = 14.0;
-				MARKETING_VERSION = 0.2.0;
+				MARKETING_VERSION = 0.3.0;
 				MTL_ENABLE_DEBUG_INFO = INCLUDE_SOURCE;
 				MTL_FAST_MATH = YES;
 				ONLY_ACTIVE_ARCH = YES;
@@ -346,7 +350,7 @@
 				CODE_SIGN_IDENTITY = "-";
 				CODE_SIGN_STYLE = Automatic;
 				COPY_PHASE_STRIP = NO;
-				CURRENT_PROJECT_VERSION = 2;
+				CURRENT_PROJECT_VERSION = 3;
 				DEBUG_INFORMATION_FORMAT = "dwarf-with-dsym";
 				DEVELOPMENT_TEAM = "";
 				ENABLE_NS_ASSERTIONS = NO;
@@ -360,7 +364,7 @@
 				GCC_WARN_UNUSED_FUNCTION = YES;
 				GCC_WARN_UNUSED_VARIABLE = YES;
 				MACOSX_DEPLOYMENT_TARGET = 14.0;
-				MARKETING_VERSION = 0.2.0;
+				MARKETING_VERSION = 0.3.0;
 				MTL_ENABLE_DEBUG_INFO = NO;
 				MTL_FAST_MATH = YES;
 				PRODUCT_BUNDLE_IDENTIFIER = com.ryandia.PocketNotes;

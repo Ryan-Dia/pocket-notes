@@ -9,11 +9,9 @@ final class NotesStore: ObservableObject {
 
     var rootURL: URL {
         get {
-            if let path = UserDefaults.standard.string(forKey: "rootFolderPath") {
-                return URL(fileURLWithPath: path)
-            }
             let docs = FileManager.default.urls(for: .documentDirectory, in: .userDomainMask)[0]
-            return docs.appendingPathComponent("PocketNotes")
+            return UserDefaults.standard.string(forKey: "rootFolderPath")
+                .map(URL.init(fileURLWithPath:)) ?? docs.appendingPathComponent("PocketNotes")
         }
         set {
             UserDefaults.standard.set(newValue.path, forKey: "rootFolderPath")
