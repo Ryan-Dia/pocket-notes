@@ -7,7 +7,7 @@
 ![Swift](https://img.shields.io/badge/Swift-5.10-orange?style=flat-square&logo=swift)
 ![Platform](https://img.shields.io/badge/macOS-14.0+-blue?style=flat-square&logo=apple)
 ![Version](https://img.shields.io/badge/version-0.1.0-green?style=flat-square)
-![License](https://img.shields.io/badge/license-MIT-lightgrey?style=flat-square)
+![License](https://img.shields.io/badge/license-All%20Rights%20Reserved-red?style=flat-square)
 
 </div>
 
@@ -80,17 +80,6 @@ PocketNotes는 메뉴바 아이콘을 클릭하면 화면 측면에서 슬라이
 3. `folder.badge.plus` 버튼으로 폴더를 만들고, 폴더 안에서 `+` 버튼으로 노트를 추가합니다
 4. 노트는 입력 즉시 자동 저장됩니다
 
-### 폴더 구조
-
-```
-최상위 폴더 (depth 0)
-├── 상위 폴더 (depth 1)
-│   ├── 하위 폴더 (depth 2)  ← 최대 깊이
-│   │   └── 노트.md
-│   └── 노트.md
-└── 노트.md
-```
-
 ### 설정
 
 | 항목 | 설명 |
@@ -101,27 +90,6 @@ PocketNotes는 메뉴바 아이콘을 클릭하면 화면 측면에서 슬라이
 
 ---
 
-## 프로젝트 구조
-
-```
-PocketNotes/
-├── AppDelegate.swift          # 메뉴바 설정
-├── Panel/
-│   ├── PanelController.swift  # 슬라이드 애니메이션 & 화면 관리
-│   └── SlidingPanel.swift     # NSPanel 서브클래스
-├── Storage/
-│   ├── NoteNode.swift         # 노트/폴더 트리 노드
-│   ├── NotesStore.swift       # 파일 CRUD & 상태 관리
-│   └── FolderWatcher.swift    # 파일시스템 변경 감지
-└── UI/
-    ├── ContentView.swift       # 네비게이션 스택
-    ├── SidebarView.swift       # 폴더 목록
-    ├── FolderContentsView.swift # 폴더 내부 뷰
-    └── EditorView.swift        # 노트 카드
-```
-
----
-
 ## 라이선스
 
-MIT © [Ryan-Dia](https://github.com/Ryan-Dia)
+Copyright (c) 2026 [Ryan-Dia](https://github.com/Ryan-Dia). All Rights Reserved.
