@@ -10,6 +10,7 @@ struct NoteCardView: View {
     @State private var saveTimer: AnyCancellable?
     @FocusState private var isFocused: Bool
     @State private var isHandleHovered = false
+    @State private var isPreviewMode = false
 
     private static let dateFormatter: DateFormatter = {
         let f = DateFormatter()
@@ -45,32 +46,42 @@ struct NoteCardView: View {
             .onHover { isHandleHovered = $0 }
 
             VStack(alignment: .leading, spacing: 0) {
-                ZStack(alignment: .topLeading) {
-                    if text.isEmpty {
-                        Text("노트를 작성하세요...")
-                            .font(.system(size: 14))
-                            .foregroundStyle(.tertiary)
-                            .padding(.horizontal, 16)
-                            .padding(.top, 12)
-                            .allowsHitTesting(false)
-                    }
-                    TextEditor(text: $text)
-                        .font(.system(size: 14))
-                        .scrollContentBackground(.hidden)
-                        .background(.clear)
+                if isPreviewMode {
+                    MarkdownPreview(text: text)
                         .frame(minHeight: 90)
-                        .padding(.horizontal, 12)
-                        .padding(.top, 8)
-                        .padding(.bottom, 4)
-                        .focused($isFocused)
+                } else {
+                    ZStack(alignment: .topLeading) {
+                        if text.isEmpty {
+                            Text("노트를 작성하세요...")
+                                .font(.system(size: 14))
+                                .foregroundStyle(.tertiary)
+                                .padding(.horizontal, 16)
+                                .padding(.top, 12)
+                                .allowsHitTesting(false)
+                        }
+                        TextEditor(text: $text)
+                            .font(.system(size: 14))
+                            .scrollContentBackground(.hidden)
+                            .background(.clear)
+                            .frame(minHeight: 90)
+                            .padding(.horizontal, 12)
+                            .padding(.top, 8)
+                            .padding(.bottom, 4)
+                            .focused($isFocused)
+                    }
                 }
 
                 Divider().opacity(0.12)
 
                 HStack(spacing: 14) {
-                    Image(systemName: "textformat")
-                        .font(.system(size: 12))
-                        .foregroundStyle(.secondary)
+                    Button {
+                        isPreviewMode.toggle()
+                    } label: {
+                        Image(systemName: isPreviewMode ? "eye.fill" : "pencil")
+                            .font(.system(size: 12))
+                            .foregroundStyle(isPreviewMode ? theme.accent : .secondary)
+                    }
+                    .buttonStyle(.plain)
 
                     Spacer()
 
