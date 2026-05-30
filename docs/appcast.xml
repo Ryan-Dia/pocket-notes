@@ -8,10 +8,10 @@
       <sparkle:version>3</sparkle:version>
       <sparkle:shortVersionString>0.3.0</sparkle:shortVersionString>
       <enclosure
-        url="https://github.com/Ryan-Dia/pocket-notes/releases/download/v0.3.0/PocketNotes-0.3.0.dmg"
+        url="https://github.com/Ryan-Dia/pocket-notes/releases/download/v0.3.0/PocketNotes-v0.3.0.zip"
         sparkle:edSignature="VUgOwRnZ8cfuFjGYTuMSShGn4wnWXVlM046UknsGEG0KK9uUrQahXwoWJsDb3TokfBDFBgZc+ii8w/eUSey4Aw=="
         length="1293514"
-        type="application/octet-stream"/>
+        type="application/zip"/>
     </item>
   </channel>
 </rss>
