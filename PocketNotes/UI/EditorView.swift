@@ -75,6 +75,8 @@ struct NoteCardView: View {
 
                 HStack(spacing: 14) {
                     Button {
+                        saveTimer?.cancel()
+                        store.saveContent(text, to: note)
                         isPreviewMode.toggle()
                     } label: {
                         Image(systemName: isPreviewMode ? "eye.fill" : "pencil")
