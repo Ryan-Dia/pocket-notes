@@ -47,8 +47,12 @@ struct NoteCardView: View {
 
             VStack(alignment: .leading, spacing: 0) {
                 if isPreviewMode {
-                    MarkdownPreview(text: text)
-                        .frame(minHeight: 90)
+                    MarkdownWebView(text: text, accentColor: theme.accent) {
+                        saveTimer?.cancel()
+                        store.saveContent(text, to: note)
+                        isPreviewMode = false
+                    }
+                    .frame(minHeight: 90)
                 } else {
                     ZStack(alignment: .topLeading) {
                         if text.isEmpty {
