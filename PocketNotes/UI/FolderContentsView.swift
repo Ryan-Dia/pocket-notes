@@ -10,6 +10,10 @@ struct FolderContentsView: View {
     @State private var renaming: NoteNode? = nil
     @State private var renameText = ""
     @State private var hoveredFolderID: String?
+    @State private var isHoveringBack = false
+    @State private var isRenamingHeader = false
+    @State private var headerRenameText = ""
+    @FocusState private var isRenameFieldFocused: Bool
 
     // Note drag state
     @State private var dragNote: NoteNode? = nil
@@ -69,16 +73,59 @@ struct FolderContentsView: View {
         HStack(alignment: .center) {
             Button { onBack() } label: {
                 Image(systemName: "chevron.left")
-                    .font(.system(size: 16, weight: .semibold))
+                    .font(.system(size: 22, weight: .semibold))
                     .foregroundStyle(theme.accent)
+                    .padding(8)
+                    .background(
+                        RoundedRectangle(cornerRadius: 6)
+                            .fill(Color.primary.opacity(isHoveringBack ? 0.08 : 0))
+                    )
+                    .animation(.easeInOut(duration: 0.15), value: isHoveringBack)
             }
             .buttonStyle(.plain)
+            .onHover { isHoveringBack = $0 }
             .padding(.trailing, 4)
 
-            Text(folder.name)
-                .font(.system(size: 20, weight: .bold))
-                .foregroundStyle(theme.heading)
-                .lineLimit(1)
+            if isRenamingHeader {
+                TextField("폴더 이름", text: $headerRenameText)
+                    .font(.system(size: 20, weight: .bold))
+                    .foregroundStyle(theme.heading)
+                    .textFieldStyle(.plain)
+                    .focused($isRenameFieldFocused)
+                    .padding(.horizontal, 8)
+                    .padding(.vertical, 4)
+                    .background(theme.accent.opacity(0.08))
+                    .overlay(
+                        RoundedRectangle(cornerRadius: 6)
+                            .stroke(theme.accent.opacity(0.45), lineWidth: 1.5)
+                    )
+                    .clipShape(RoundedRectangle(cornerRadius: 6))
+                    .onSubmit {
+                        let t = headerRenameText.trimmingCharacters(in: .whitespaces)
+                        if !t.isEmpty { store.rename(folder, to: t) }
+                        isRenamingHeader = false
+                    }
+                    .onExitCommand { isRenamingHeader = false }
+                    .onAppear { isRenameFieldFocused = true }
+                    .onChange(of: isRenameFieldFocused) { focused in
+                        if !focused && isRenamingHeader {
+                            let t = headerRenameText.trimmingCharacters(in: .whitespaces)
+                            if !t.isEmpty { store.rename(folder, to: t) }
+                            isRenamingHeader = false
+                        }
+                    }
+            } else {
+                Button {
+                    headerRenameText = folder.name
+                    isRenamingHeader = true
+                } label: {
+                    Text(folder.name)
+                        .font(.system(size: 20, weight: .bold))
+                        .foregroundStyle(theme.heading)
+                        .lineLimit(1)
+                }
+                .buttonStyle(.plain)
+            }
 
             Spacer()
 
