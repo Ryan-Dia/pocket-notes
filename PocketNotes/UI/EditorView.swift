@@ -8,9 +8,8 @@ struct NoteCardView: View {
 
     @State private var text = ""
     @State private var saveTimer: AnyCancellable?
-    @FocusState private var isFocused: Bool
+    @State private var isActive = false
     @State private var isHandleHovered = false
-    @State private var isPreviewMode = false
 
     private static let dateFormatter: DateFormatter = {
         let f = DateFormatter()
@@ -29,8 +28,8 @@ struct NoteCardView: View {
         HStack(spacing: 0) {
             ZStack {
                 Rectangle()
-                    .fill(isFocused ? theme.accent : theme.accent.opacity(0.35))
-                    .animation(.easeInOut(duration: 0.15), value: isFocused)
+                    .fill(isActive ? theme.accent : theme.accent.opacity(0.35))
+                    .animation(.easeInOut(duration: 0.15), value: isActive)
                 VStack(spacing: 4) {
                     ForEach(0..<3, id: \.self) { _ in
                         HStack(spacing: 4) {
@@ -46,58 +45,30 @@ struct NoteCardView: View {
             .onHover { isHandleHovered = $0 }
 
             VStack(alignment: .leading, spacing: 0) {
-                if isPreviewMode {
-                    MarkdownWebView(text: text, accentColor: theme.accent) {
-                        saveTimer?.cancel()
-                        store.saveContent(text, to: note)
-                        isPreviewMode = false
-                    }
-                    .frame(minHeight: 90)
-                } else {
-                    ZStack(alignment: .topLeading) {
-                        if text.isEmpty {
-                            Text("노트를 작성하세요...")
-                                .font(.system(size: 14))
-                                .foregroundStyle(.tertiary)
-                                .padding(.horizontal, 16)
-                                .padding(.top, 12)
-                                .allowsHitTesting(false)
-                        }
-                        TextEditor(text: $text)
+                ZStack(alignment: .topLeading) {
+                    if text.isEmpty {
+                        Text("노트를 작성하세요...")
                             .font(.system(size: 14))
-                            .scrollContentBackground(.hidden)
-                            .background(.clear)
-                            .frame(minHeight: 90)
-                            .padding(.horizontal, 12)
-                            .padding(.top, 8)
-                            .padding(.bottom, 4)
-                            .focused($isFocused)
+                            .foregroundStyle(.tertiary)
+                            .padding(.horizontal, 20)
+                            .padding(.top, 16)
+                            .allowsHitTesting(false)
                     }
+                    MarkdownEditor(text: $text, accentColor: theme.accent) { focused in
+                        isActive = focused
+                    }
+                    .frame(minHeight: 110)
                 }
 
                 Divider().opacity(0.12)
 
                 HStack(spacing: 14) {
-                    Button {
-                        saveTimer?.cancel()
-                        store.saveContent(text, to: note)
-                        isPreviewMode.toggle()
-                    } label: {
-                        Image(systemName: isPreviewMode ? "eye.fill" : "pencil")
-                            .font(.system(size: 12))
-                            .foregroundStyle(isPreviewMode ? theme.accent : .secondary)
-                    }
-                    .buttonStyle(.plain)
-
                     Spacer()
-
                     Text(dateString)
                         .font(.system(size: 11))
                         .foregroundStyle(.tertiary)
                         .lineLimit(1)
-
                     Spacer()
-
                     Button { store.delete(note) } label: {
                         Image(systemName: "trash")
                             .font(.system(size: 12))
@@ -111,7 +82,7 @@ struct NoteCardView: View {
         }
         .background(theme.card)
         .clipShape(RoundedRectangle(cornerRadius: 12))
-        .shadow(color: .black.opacity(isFocused ? 0.12 : 0.06), radius: isFocused ? 8 : 4, x: 0, y: 2)
+        .shadow(color: .black.opacity(isActive ? 0.12 : 0.06), radius: isActive ? 8 : 4, x: 0, y: 2)
         .onAppear { text = store.readContent(of: note) }
         .onChange(of: note.url) { _, _ in text = store.readContent(of: note) }
         .onChange(of: text) { scheduleSave() }

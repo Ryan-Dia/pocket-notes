@@ -8,7 +8,7 @@
 
 /* Begin PBXBuildFile section */
 		02FEB9B4009D14C219615351 /* GlobalHotkey.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1C70ADEEEC6866BBDAA2AFF9 /* GlobalHotkey.swift */; };
-		0C83DF68A9D29D2DCF73B257 /* MarkdownPreview.swift in Sources */ = {isa = PBXBuildFile; fileRef = 98B120A42C43D20C91A07221 /* MarkdownPreview.swift */; };
+		B5ECD9AC41D0401BA9DB142C /* MarkdownEditor.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5C9A986B08DC4A9982A97AD8 /* MarkdownEditor.swift */; };
 		11C97685686FC00D8CD5468B /* NoteNode.swift in Sources */ = {isa = PBXBuildFile; fileRef = 63D9AFF1DD159A1FB2B27F07 /* NoteNode.swift */; };
 		25EA51B68C7C1E3C3F259F5B /* FolderContentsView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7CFF7F3EB71A6770626A00CF /* FolderContentsView.swift */; };
 		26BF53828307163DFE0340CC /* ThemeStore.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1B1F197E53CEA86A40034832 /* ThemeStore.swift */; };
@@ -44,7 +44,7 @@
 		90A6D02B02A4A8CCDA76861F /* SlidingPanel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SlidingPanel.swift; sourceTree = "<group>"; };
 		9167DD3F355CDAE580B340E6 /* ContentView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ContentView.swift; sourceTree = "<group>"; };
 		95FAF694362A972A6370D32B /* EditorView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = EditorView.swift; sourceTree = "<group>"; };
-		98B120A42C43D20C91A07221 /* MarkdownPreview.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MarkdownPreview.swift; sourceTree = "<group>"; };
+		5C9A986B08DC4A9982A97AD8 /* MarkdownEditor.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MarkdownEditor.swift; sourceTree = "<group>"; };
 		9DBCB2EB02C786FFCE884708 /* PocketNotes.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = PocketNotes.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		BEB6B24E6636518D198DCD0B /* HotkeyRecorderView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HotkeyRecorderView.swift; sourceTree = "<group>"; };
 		C7C69F16DF01DB38768E671C /* PanelController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PanelController.swift; sourceTree = "<group>"; };
@@ -120,7 +120,7 @@
 				9167DD3F355CDAE580B340E6 /* ContentView.swift */,
 				95FAF694362A972A6370D32B /* EditorView.swift */,
 				7CFF7F3EB71A6770626A00CF /* FolderContentsView.swift */,
-				98B120A42C43D20C91A07221 /* MarkdownPreview.swift */,
+				5C9A986B08DC4A9982A97AD8 /* MarkdownEditor.swift */,
 				F3231F73CBD0E9F54F6FFF0D /* SharedComponents.swift */,
 				818613C21C76992EED9A62E8 /* SidebarView.swift */,
 			);
@@ -228,7 +228,7 @@
 				02FEB9B4009D14C219615351 /* GlobalHotkey.swift in Sources */,
 				F4C63AB3A52DBCCEF3C7FA74 /* HotkeyRecorderView.swift in Sources */,
 				D57166278FC09187DD129BA5 /* LocalHotkeyMonitor.swift in Sources */,
-				0C83DF68A9D29D2DCF73B257 /* MarkdownPreview.swift in Sources */,
+				B5ECD9AC41D0401BA9DB142C /* MarkdownEditor.swift in Sources */,
 				11C97685686FC00D8CD5468B /* NoteNode.swift in Sources */,
 				2FAAA07A6B8B787D451A12BE /* NotesStore.swift in Sources */,
 				B76FC2FC2407915FD85C96DB /* OrderStore.swift in Sources */,
